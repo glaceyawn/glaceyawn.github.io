@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>tabby</title>
   <meta name="description" content="tabby's corner of the internet" />
+  <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#8878d4" />
   <meta property="og:title" content="tabby :3" />
   <meta property="og:description" content="bio · music · a terminal · some secrets — click around" />
@@ -17,6 +18,7 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
+      color-scheme: dark;
       --accent: #8878d4;
       --accent-rgb: 136,120,212;
     }
@@ -66,6 +68,38 @@
     }
     @keyframes drift1 { to { transform: translate(80px, 55px); } }
     @keyframes drift2 { to { transform: translate(-70px, -45px); } }
+
+    .orb-3 {
+      width: 320px; height: 320px;
+      background: #d4a5b8;
+      top: 42%; left: 58%;
+      opacity: 0.04;
+      animation: drift3 40s ease-in-out infinite alternate;
+    }
+    @keyframes drift3 { to { transform: translate(-70px, 60px); } }
+
+    /* ── aurora ribbon across the top ── */
+    .aurora {
+      position: fixed;
+      top: -170px;
+      left: -10%;
+      width: 120%;
+      height: 360px;
+      z-index: 0;
+      pointer-events: none;
+      background: linear-gradient(100deg,
+        transparent 10%,
+        rgba(var(--accent-rgb), 0.055) 35%,
+        rgba(168, 176, 204, 0.045) 55%,
+        rgba(212, 165, 184, 0.04) 72%,
+        transparent 90%);
+      filter: blur(42px);
+      transform: skewY(-4deg);
+      animation: aurorashift 20s ease-in-out infinite alternate;
+    }
+    @keyframes aurorashift {
+      to { transform: skewY(-2deg) translateX(70px); }
+    }
 
 
     /* ── Card ── */
@@ -370,6 +404,58 @@
     .tag[data-c="3"]:hover { border-color: #d4a5b8; color: #d4a5b8; box-shadow: 0 0 10px rgba(212,165,184,0.15); }
     .tag[data-c="4"]:hover { border-color: #a5d4b8; color: #a5d4b8; box-shadow: 0 0 10px rgba(165,212,184,0.15); }
 
+    /* ── rig ── */
+    .rig-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px 12px;
+    }
+    .rig-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      line-height: 1.8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .rig-item .r-k { color: #3a3a3a; margin-right: 7px; }
+    .rig-item .r-v { color: #6e6e6e; transition: color 0.15s; }
+    .rig-item:hover .r-v { color: var(--accent); }
+
+    /* ── live sys monitor ── */
+    .sys-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      color: #4e4e4e;
+    }
+    .sys-line .s-v { color: var(--accent); opacity: 0.8; }
+
+    .yearbar {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 9px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.54rem;
+      color: #3e3e3e;
+      letter-spacing: 0.04em;
+    }
+    .yearbar-track {
+      flex: 1;
+      height: 2px;
+      background: #2a2a2a;
+      border-radius: 1px;
+      overflow: hidden;
+    }
+    .yearbar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #a8b0cc);
+    }
+
     /* ── Links ── */
     .links-grid {
       display: grid;
@@ -456,6 +542,31 @@
       color: #3e3e3e;
       letter-spacing: 0.05em;
       user-select: none;
+    }
+
+    .music-thumb {
+      width: 30px;
+      height: 30px;
+      border: 1px solid #2a2a2a;
+      border-radius: 2px;
+      object-fit: cover;
+      display: none;
+      flex-shrink: 0;
+    }
+    .track-idx {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.54rem;
+      color: #3e3e3e;
+      flex-shrink: 0;
+      padding-left: 8px;
+    }
+    .vol-pct {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.54rem;
+      color: #3e3e3e;
+      width: 30px;
+      text-align: right;
+      flex-shrink: 0;
     }
 
     .music-title {
@@ -653,6 +764,85 @@
       70%, 100% { transform: scale(1.9); opacity: 0; }
     }
 
+    /* ── viewfinder corner brackets ── */
+    .corner {
+      position: fixed;
+      width: 22px;
+      height: 22px;
+      z-index: 60;
+      pointer-events: none;
+      border: 0 solid rgba(var(--accent-rgb), 0.3);
+    }
+    .c-tl { top: 14px;    left: 14px;  border-top-width: 1px;    border-left-width: 1px; }
+    .c-tr { top: 14px;    right: 14px; border-top-width: 1px;    border-right-width: 1px; }
+    .c-bl { bottom: 14px; left: 14px;  border-bottom-width: 1px; border-left-width: 1px; }
+    .c-br { bottom: 14px; right: 14px; border-bottom-width: 1px; border-right-width: 1px; }
+
+    /* ── click ripple ── */
+    .ripple {
+      position: fixed;
+      border: 1px solid rgba(var(--accent-rgb), 0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 90;
+      transform: translate(-50%, -50%);
+      animation: rippleanim 0.5s ease-out forwards;
+    }
+    @keyframes rippleanim {
+      from { width: 0;    height: 0;    opacity: 0.6; }
+      to   { width: 46px; height: 46px; opacity: 0; }
+    }
+
+    /* ── cursor trail ── */
+    .trail-dot {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent);
+      pointer-events: none;
+      z-index: 90;
+      animation: traildot 0.55s ease-out forwards;
+    }
+    @keyframes traildot {
+      from { opacity: 0.7; transform: scale(1); }
+      to   { opacity: 0;   transform: scale(0.2) translateY(6px); }
+    }
+
+    /* ── idle screensaver ── */
+    .saver {
+      position: fixed;
+      inset: 0;
+      z-index: 95;
+      background: rgba(10, 10, 12, 0.93);
+      display: none;
+      cursor: pointer;
+    }
+    .saver.on { display: block; }
+    .saver-logo {
+      position: absolute;
+      top: 0;
+      left: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      color: var(--accent);
+      user-select: none;
+      white-space: nowrap;
+      will-change: transform;
+    }
+    .saver-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.55rem;
+      color: #333;
+      letter-spacing: 0.1em;
+      user-select: none;
+    }
+
     /* ── the wandering cat ── */
     .walker {
       position: fixed;
@@ -822,6 +1012,7 @@
       .card { transform: none !important; }      /* no tilt on phones */
 
       .links-grid { grid-template-columns: 1fr; }
+      .rig-grid { grid-template-columns: repeat(2, 1fr); }
 
       /* comfier tap targets */
       .music-btn { width: 34px; height: 34px; font-size: 0.65rem; }
@@ -837,6 +1028,8 @@
 
       /* lighter effects on small screens */
       .orb { display: none; }                    /* no blur cost on phones */
+      .aurora { display: none; }
+      .corner { display: none; }
       #snow { opacity: 0.35; }
     }
 
@@ -845,6 +1038,7 @@
       .card-wrap, .music-note, .cursor, .tw-cursor, .eq i { animation: none; }
       .status-dot.online::after { animation: none; opacity: 0; }
       .orb { animation: none; }
+      .aurora { animation: none; }
       .card::after { animation: none; }
       .card { transform: none !important; }
     }
@@ -863,8 +1057,19 @@
 
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+<div class="aurora"></div>
+<div class="corner c-tl"></div>
+<div class="corner c-tr"></div>
+<div class="corner c-bl"></div>
+<div class="corner c-br"></div>
 
 <span class="walker" id="walker" title="pet the cat">ᓚᘏᗢ</span>
+
+<div class="saver" id="saver">
+  <span class="saver-logo" id="saver-logo">tabby.beauty ᓚᘏᗢ</span>
+  <div class="saver-hint">— touch anything to wake —</div>
+</div>
 
 <button class="help-btn" id="help-btn" title="help" aria-label="help">?</button>
 <div class="help-panel" id="help-panel">
@@ -886,6 +1091,7 @@
   <div class="help-row"><span class="help-k">help</span><span class="help-d">list commands</span></div>
   <div class="help-row"><span class="help-k">tab</span><span class="help-d">autocomplete</span></div>
   <div class="help-row"><span class="help-k">ctrl+l</span><span class="help-d">clear terminal</span></div>
+  <div class="help-row"><span class="help-k">idle ~1min</span><span class="help-d">screensaver</span></div>
   <div class="help-secret">…there's also a secret code :3</div>
 </div>
 
@@ -924,8 +1130,10 @@
   <div class="section reveal">
     <div class="section-label">now playing</div>
     <div class="music-title-row">
+      <img class="music-thumb" id="music-thumb" alt="" />
       <span class="music-note" id="music-note" title="tint the snow">♫</span>
       <span class="music-title" id="music-title">click ▶︎ to play</span>
+      <span class="track-idx" id="track-idx"></span>
       <span class="eq paused" id="eq"><i></i><i></i><i></i><i></i></span>
     </div>
     <div class="music-controls">
@@ -933,6 +1141,7 @@
       <button class="music-btn" id="play-btn" title="play / pause" aria-label="play or pause">▶︎</button>
       <button class="music-btn" id="next-btn" title="next" aria-label="next track">⏭︎</button>
       <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="1">
+      <span class="vol-pct" id="vol-pct">1%</span>
       <button class="music-btn" id="mute-btn" title="mute / unmute" aria-label="mute or unmute">♪</button>
     </div>
     <div class="yt-progress" id="yt-progress" title="seek">
@@ -960,6 +1169,18 @@
   </div>
 
   <div class="section reveal">
+    <div class="section-label">rig</div>
+    <div class="rig-grid">
+      <span class="rig-item"><span class="r-k">cpu</span><span class="r-v">i5-13600k</span></span>
+      <span class="rig-item"><span class="r-k">gpu</span><span class="r-v">rtx 4070</span></span>
+      <span class="rig-item"><span class="r-k">os</span><span class="r-v">nixos</span></span>
+      <span class="rig-item"><span class="r-k">wm</span><span class="r-v">hyprland</span></span>
+      <span class="rig-item"><span class="r-k">term</span><span class="r-v">kitty</span></span>
+      <span class="rig-item"><span class="r-k">editor</span><span class="r-v">neovim</span></span>
+    </div>
+  </div>
+
+  <div class="section reveal">
     <div class="section-label">links</div>
     <div class="links-grid">
       <a class="link-row" href="https://github.com/glaceyawn" target="_blank" rel="noopener">
@@ -971,6 +1192,31 @@
       <a class="link-row" href="https://discord.gg/Q8ny86SRvs" target="_blank" rel="noopener">
         <span>server</span><span class="link-arrow">›</span>
       </a>
+    </div>
+  </div>
+
+  <div class="section reveal" id="gh-section" style="display:none">
+    <div class="section-label">github</div>
+    <div class="sys-line">
+      <span>repos <span class="s-v" id="gh-repos">--</span></span>
+      <span>followers <span class="s-v" id="gh-followers">--</span></span>
+      <span>gists <span class="s-v" id="gh-gists">--</span></span>
+    </div>
+  </div>
+
+  <div class="section reveal">
+    <div class="section-label">sys</div>
+    <div class="sys-line">
+      <span>fps <span class="s-v" id="sys-fps">--</span></span>
+      <span>ping <span class="s-v" id="sys-ping">--</span></span>
+      <span>up <span class="s-v" id="sys-up">--</span></span>
+      <span>visits <span class="s-v" id="sys-visits">--</span></span>
+      <span id="sys-batt-wrap" style="display:none">batt <span class="s-v" id="sys-batt">--</span></span>
+    </div>
+    <div class="yearbar">
+      <span id="year-label">2026</span>
+      <div class="yearbar-track"><div class="yearbar-fill" id="year-fill"></div></div>
+      <span id="year-pct">--%</span>
     </div>
   </div>
 
@@ -1062,6 +1308,7 @@
   let gameName  = null;
   let gameDetails = null;  // rich presence detail line
   let lastStatus  = 'offline';
+  let lastPing    = null;  // measured lanyard round-trip
 
   const STATUS_WORDS = { online: 'online', idle: 'away', dnd: 'do not disturb', offline: 'offline' };
 
@@ -1080,8 +1327,10 @@
 
   async function sync() {
     try {
+      const t0 = performance.now();
       const r = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
       const { data: d } = await r.json();
+      lastPing = Math.round(performance.now() - t0);
 
       // status dot + presence line
       const st = d.discord_status ?? 'offline';
@@ -1254,6 +1503,20 @@
   function updateTrackTitle() {
     if (!ytPlayer) return;
     const data = ytPlayer.getVideoData();
+    // album art from the video thumbnail
+    if (data && data.video_id) {
+      const thumb = document.getElementById('music-thumb');
+      const src = 'https://i.ytimg.com/vi/' + data.video_id + '/default.jpg';
+      if (thumb.src !== src) thumb.src = src;
+      thumb.style.display = 'block';
+    }
+    // track position in the playlist
+    try {
+      const pl = ytPlayer.getPlaylist();
+      if (pl && pl.length) {
+        document.getElementById('track-idx').textContent = (ytPlayer.getPlaylistIndex() + 1) + '/' + pl.length;
+      }
+    } catch (_) {}
     if (data && data.title) {
       document.getElementById('music-title').textContent = data.title;
       if (data.title !== lastTitle) {
@@ -1449,6 +1712,7 @@
   });
 
   document.getElementById('vol-slider').addEventListener('input', function() {
+    document.getElementById('vol-pct').textContent = this.value + '%';
     if (!ytPlayer) return;
     const v = parseInt(this.value);
     ytPlayer.setVolume(v);
@@ -1531,6 +1795,8 @@
   let termWelcomed = false;
   const termHistory = [];
   let histIdx = 0;
+  let partyOn = false;
+  let trailOn = false;
 
   function termPrint(html) {
     const d = document.createElement('div');
@@ -1559,7 +1825,7 @@
 
   const COMMANDS = {
     help() {
-      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · ls · open &lt;link&gt; · theme &lt;color&gt; · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · echo · date · uptime · history · clear · exit');
+      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
     },
     whoami() {
       const ua = navigator.userAgent;
@@ -1694,6 +1960,109 @@
       catWalk();
       termPrint('<span class="t-acc">ᓚᘏᗢ</span> <span class="t-dim">here kitty…</span>');
     },
+    fortune() {
+      const F = [
+        'the snow knows something you don\'t',
+        'a purple accent brings good luck today',
+        'you will find the semicolon you lost',
+        'someone is thinking about your dotfiles',
+        'trust the cat',
+        'today is a good day to rice',
+        'the terminal remembers everything :3',
+        'a great playlist add is in your future',
+        'reboot nothing. it works. walk away.',
+        'ᓚᘏᗢ approves of your path'
+      ];
+      termPrint('<span class="t-acc">☆</span> ' + F[Math.floor(Math.random() * F.length)]);
+    },
+    ['8ball'](_, rest) {
+      if (!rest) { termPrint('<span class="t-dim">usage: 8ball &lt;question&gt;</span>'); return; }
+      const A = ['yes :3', 'no.', 'absolutely', 'ask the cat', 'unclear, shake again', 'without a doubt',
+                 'mrrp (that means yes)', 'the snow says no', 'certainly not', 'probably!', 'don\'t count on it'];
+      termPrint('<span class="t-acc">(8)</span> ' + A[Math.floor(Math.random() * A.length)]);
+    },
+    roll(arg) {
+      const n = parseInt(arg) || 6;
+      if (n < 2 || n > 1000000) { termPrint('<span class="t-dim">usage: roll 2-1000000</span>'); return; }
+      termPrint('d' + n + ' <span class="t-acc">→ ' + (1 + Math.floor(Math.random() * n)) + '</span>');
+    },
+    flip() {
+      termPrint('<span class="t-acc">' + (Math.random() < 0.5 ? 'heads' : 'tails') + '</span>');
+    },
+    calc(_, rest) {
+      if (!rest || !/^[0-9+\-*/(). %]+$/.test(rest)) { termPrint('<span class="t-dim">usage: calc 2+2*10</span>'); return; }
+      try {
+        const r = Function('"use strict"; return (' + rest + ')')();
+        termPrint(esc(rest) + ' <span class="t-acc">= ' + r + '</span>');
+      } catch (_) { termPrint('<span class="t-err">math broke</span>'); }
+    },
+    ping(_, rest) {
+      const host = (rest || 'tabby.beauty').split(' ')[0].slice(0, 40);
+      let i = 0;
+      const iv = setInterval(() => {
+        i++;
+        termPrint('reply from <span class="t-acc">' + esc(host) + '</span>: time=' + (8 + Math.random() * 40).toFixed(1) + 'ms');
+        if (i >= 4) { clearInterval(iv); termPrint('<span class="t-dim">4 packets, 0% loss (trust me)</span>'); }
+      }, 350);
+    },
+    hack() {
+      const L = ['initializing exploit…', 'bypassing firewall…', 'decrypting mainframe…',
+                 'spoofing identity…', 'injecting payload…', 'stealing snacks from the kitchen…'];
+      let i = 0;
+      const iv = setInterval(() => {
+        if (i < L.length) { termPrint('<span class="t-dim">' + L[i++] + '</span>'); }
+        else {
+          clearInterval(iv);
+          card.classList.add('glitch');
+          setTimeout(() => card.classList.remove('glitch'), 600);
+          termPrint('<span class="t-acc">ACCESS GRANTED</span> <span class="t-dim">:3 (nothing was hacked)</span>');
+        }
+      }, 320);
+    },
+    train() {
+      const d = document.createElement('div');
+      termOut.appendChild(d);
+      let pos = 26;
+      const iv = setInterval(() => {
+        d.textContent = ' '.repeat(Math.max(0, pos)) + 'o o o ─┬─┬─[ tabby express ]═══──';
+        termOut.scrollTop = termOut.scrollHeight;
+        pos--;
+        if (pos < -1) {
+          clearInterval(iv);
+          termPrint('<span class="t-dim">choo choo :3 (you meant ls, didn\'t you)</span>');
+        }
+      }, 70);
+    },
+    matrix() {
+      toggleMatrix();
+      termPrint(bgMode === 'matrix'
+        ? '<span class="t-acc">wake up, tabby…</span> <span class="t-dim">(matrix again to stop)</span>'
+        : '<span class="t-dim">back to snow</span>');
+    },
+    party() {
+      if (partyOn) { termPrint('<span class="t-dim">already partying</span>'); return; }
+      partyOn = true;
+      const orig = accentIdx;
+      termPrint('<span class="t-acc">party mode</span> — 8 seconds of chaos');
+      const iv = setInterval(() => { accentIdx = (accentIdx + 1) % ACCENTS.length; applyAccent(); }, 450);
+      setTimeout(() => {
+        clearInterval(iv);
+        accentIdx = orig;
+        applyAccent();
+        partyOn = false;
+        showToast('party over <span class="t-accent">:3</span>');
+      }, 8000);
+    },
+    trail() {
+      trailOn = !trailOn;
+      termPrint(trailOn ? '<span class="t-acc">✦ cursor trail on</span>' : '<span class="t-dim">trail off</span>');
+    },
+    whois() {
+      termPrint('<span class="t-acc">tabby</span> <span class="t-dim">·</span> linux enjoyer <span class="t-dim">·</span> mediocre coder (self-proclaimed) <span class="t-dim">·</span> fragmovie editor <span class="t-dim">·</span> owner of this fine establishment');
+    },
+    pwd() { termPrint('/home/tabby/bio'); },
+    cd() { termPrint('<span class="t-dim">nowhere else to go — this is home :3</span>'); },
+    secrets() { termPrint('<span class="t-dim">that would be telling :3 (there are 2)</span>'); },
     async github() {
       termPrint('<span class="t-dim">fetching…</span>');
       try {
@@ -1810,6 +2179,7 @@
   function resize() {
     W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
+    initSky();
   }
 
   function makeFlake() {
@@ -1822,10 +2192,116 @@
     };
   }
 
-  function init() { resize(); flakes = Array.from({ length: 120 }, makeFlake); }
+  function init() { resize(); flakes = Array.from({ length: 120 }, makeFlake); initSky(); }
+
+  // ── matrix mode ──
+  let bgMode = 'snow';
+  let drops = [];
+  const MCHARS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿ0123456789:3<>/';
+
+  function toggleMatrix() {
+    bgMode = (bgMode === 'snow') ? 'matrix' : 'snow';
+    drops = [];
+  }
+
+  // ── night sky: stars, fireflies, meteors ──
+  let stars = [], flies = [], meteors = [];
+  let nextMeteor = performance.now() + 5000 + Math.random() * 8000;
+
+  function initSky() {
+    stars = Array.from({ length: 90 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.1 + 0.3,
+      tw: Math.random() * Math.PI * 2,
+      sp: 0.008 + Math.random() * 0.022,
+      depth: 0.2 + Math.random() * 0.8
+    }));
+    flies = Array.from({ length: 7 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      a: Math.random() * Math.PI * 2,
+      sp: 0.15 + Math.random() * 0.2,
+      tw: Math.random() * Math.PI * 2
+    }));
+  }
+
+  function drawSky() {
+    // parallax from cursor
+    const px = snowMouse.x >= 0 ? (snowMouse.x - W / 2) : 0;
+    const py = snowMouse.y >= 0 ? (snowMouse.y - H / 2) : 0;
+
+    // twinkling stars
+    for (const s of stars) {
+      s.tw += s.sp;
+      const o = 0.22 + 0.33 * (0.5 + 0.5 * Math.sin(s.tw));
+      ctx.beginPath();
+      ctx.arc(s.x - px * 0.012 * s.depth, s.y - py * 0.012 * s.depth, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,' + o + ')';
+      ctx.fill();
+    }
+
+    // accent fireflies, wandering
+    for (const f of flies) {
+      f.a += (Math.random() - 0.5) * 0.3;
+      f.x += Math.cos(f.a) * f.sp;
+      f.y += Math.sin(f.a) * f.sp;
+      f.tw += 0.04;
+      if (f.x < -10) f.x = W + 10; if (f.x > W + 10) f.x = -10;
+      if (f.y < -10) f.y = H + 10; if (f.y > H + 10) f.y = -10;
+      const o = 0.15 + 0.3 * (0.5 + 0.5 * Math.sin(f.tw));
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',' + (o * 0.22) + ')';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, 1.6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',' + o + ')';
+      ctx.fill();
+    }
+
+    // shooting stars
+    if (performance.now() > nextMeteor) {
+      meteors.push({
+        x: W * 0.15 + Math.random() * W * 0.7, y: -20,
+        vx: -(2 + Math.random() * 2), vy: 2.2 + Math.random() * 1.5,
+        life: 1
+      });
+      nextMeteor = performance.now() + 9000 + Math.random() * 15000;
+    }
+    for (let i = meteors.length - 1; i >= 0; i--) {
+      const m = meteors[i];
+      m.x += m.vx; m.y += m.vy; m.life -= 0.008;
+      ctx.strokeStyle = 'rgba(255,255,255,' + Math.max(0, 0.5 * m.life) + ')';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(m.x, m.y);
+      ctx.lineTo(m.x - m.vx * 12, m.y - m.vy * 12);
+      ctx.stroke();
+      if (m.life <= 0 || m.y > H + 30) meteors.splice(i, 1);
+    }
+  }
+
+  function drawMatrix() {
+    const cols = Math.floor(W / 14) + 1;
+    if (drops.length !== cols) drops = Array.from({ length: cols }, () => Math.random() * H / 14);
+    ctx.fillStyle = 'rgba(15,15,17,0.14)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.font = '12px monospace';
+    ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',0.9)';
+    for (let i = 0; i < cols; i++) {
+      ctx.fillText(MCHARS[Math.floor(Math.random() * MCHARS.length)], i * 14, drops[i] * 14);
+      if (drops[i] * 14 > H && Math.random() > 0.975) drops[i] = 0;
+      drops[i] += 0.55;
+    }
+  }
 
   function draw() {
+    if (bgMode === 'matrix') {
+      drawMatrix();
+      requestAnimationFrame(draw);
+      return;
+    }
     ctx.clearRect(0, 0, W, H);
+    drawSky();
     for (const f of flakes) {
       ctx.beginPath();
       ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
@@ -1849,6 +2325,121 @@
 
   window.addEventListener('resize', resize);
   init(); draw();
+
+  // ── cursor trail ──
+  let trailTick = 0;
+  document.addEventListener('mousemove', (e) => {
+    if (!trailOn) return;
+    if (++trailTick % 2) return;
+    const d = document.createElement('span');
+    d.className = 'trail-dot';
+    d.style.left = (e.clientX - 2) + 'px';
+    d.style.top = (e.clientY - 2) + 'px';
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 600);
+  });
+
+  // ── idle screensaver ──
+  const saver = document.getElementById('saver');
+  const saverLogo = document.getElementById('saver-logo');
+  let saverActive = false, idleTimer = null;
+  let sx = 60, sy = 60, svx = 1.4, svy = 1.1;
+
+  function saverFrame() {
+    if (!saverActive) return;
+    const r = saverLogo.getBoundingClientRect();
+    sx += svx; sy += svy;
+    if (sx <= 0 || sx + r.width >= window.innerWidth)  svx *= -1;
+    if (sy <= 0 || sy + r.height >= window.innerHeight) svy *= -1;
+    sx = Math.max(0, Math.min(sx, window.innerWidth - r.width));
+    sy = Math.max(0, Math.min(sy, window.innerHeight - r.height));
+    saverLogo.style.transform = 'translate(' + sx + 'px,' + sy + 'px)';
+    requestAnimationFrame(saverFrame);
+  }
+
+  function saverStart() {
+    if (saverActive || !hasEntered || reducedMotion || document.hidden) return;
+    saverActive = true;
+    saver.classList.add('on');
+    requestAnimationFrame(saverFrame);
+  }
+
+  function saverStop() {
+    if (!saverActive) return;
+    saverActive = false;
+    saver.classList.remove('on');
+  }
+
+  function idlePoke() {
+    saverStop();
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(saverStart, 75000);
+  }
+  ['mousemove', 'keydown', 'touchstart', 'click'].forEach(ev =>
+    document.addEventListener(ev, idlePoke, { capture: true, passive: true })
+  );
+  idlePoke();
+
+  // ── live sys widget ──
+  let fpsFrames = 0, fpsValue = 0;
+  (function fpsCount() { fpsFrames++; requestAnimationFrame(fpsCount); })();
+
+  // battery chip, where the browser allows it (chrome/android — not ios)
+  if (navigator.getBattery) {
+    navigator.getBattery().then(b => {
+      const wrap = document.getElementById('sys-batt-wrap');
+      const el = document.getElementById('sys-batt');
+      const show = () => {
+        wrap.style.display = '';
+        el.textContent = Math.round(b.level * 100) + '%' + (b.charging ? '+' : '');
+      };
+      b.addEventListener('levelchange', show);
+      b.addEventListener('chargingchange', show);
+      show();
+    }).catch(() => {});
+  }
+
+  function updateSys() {
+    fpsValue = fpsFrames; fpsFrames = 0;
+    document.getElementById('sys-fps').textContent = fpsValue;
+    document.getElementById('sys-ping').textContent = lastPing != null ? lastPing + 'ms' : '--';
+    document.getElementById('sys-up').textContent = fmtElapsed(Date.now() - pageStart);
+    document.getElementById('sys-visits').textContent = siteVisits;
+
+    // year progress
+    const now = new Date();
+    const y0 = new Date(now.getFullYear(), 0, 1);
+    const y1 = new Date(now.getFullYear() + 1, 0, 1);
+    const pct = ((now - y0) / (y1 - y0)) * 100;
+    document.getElementById('year-label').textContent = now.getFullYear();
+    document.getElementById('year-fill').style.width = pct + '%';
+    document.getElementById('year-pct').textContent = pct.toFixed(1) + '%';
+  }
+  updateSys();
+  setInterval(updateSys, 1000);
+
+  // ── github widget ──
+  (async function ghWidget() {
+    try {
+      const r = await fetch('https://api.github.com/users/glaceyawn');
+      if (!r.ok) return;
+      const j = await r.json();
+      document.getElementById('gh-repos').textContent = j.public_repos;
+      document.getElementById('gh-followers').textContent = j.followers;
+      document.getElementById('gh-gists').textContent = j.public_gists;
+      document.getElementById('gh-section').style.display = '';
+    } catch (_) {}
+  })();
+
+  // ── click ripple ──
+  document.addEventListener('click', (e) => {
+    const d = document.createElement('span');
+    d.className = 'ripple';
+    d.style.left = e.clientX + 'px';
+    d.style.top = e.clientY + 'px';
+    document.body.appendChild(d);
+    setTimeout(() => d.remove(), 550);
+  });
 </script>
 
 </body>
