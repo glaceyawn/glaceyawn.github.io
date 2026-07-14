@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>tabby</title>
+  <meta name="description" content="tabby's corner of the internet" />
+  <meta name="theme-color" content="#8878d4" />
+  <meta property="og:title" content="tabby :3" />
+  <meta property="og:description" content="bio · music · a terminal · some secrets — click around" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230f0f11'/><text x='16' y='22' font-size='13' text-anchor='middle' fill='%238878d4' font-family='monospace'>:3</text></svg>" />
+  <link rel="preconnect" href="https://api.lanyard.rest" />
+  <link rel="preconnect" href="https://www.youtube.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
   <style>
@@ -26,21 +33,40 @@
       overflow: hidden;
     }
 
-    /* ── faint scanlines over everything ── */
-    body::after {
+    /* ── vignette ── */
+    body::before {
       content: '';
       position: fixed;
       inset: 0;
-      z-index: 50;
+      z-index: 0;
       pointer-events: none;
-      background: repeating-linear-gradient(
-        0deg,
-        rgba(255,255,255,0.018) 0px,
-        rgba(255,255,255,0.018) 1px,
-        transparent 1px,
-        transparent 3px
-      );
+      background: radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,0.52) 100%);
     }
+
+    /* ── ambient orbs drifting behind everything ── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.055;
+    }
+    .orb-1 {
+      width: 440px; height: 440px;
+      background: rgb(var(--accent-rgb));
+      top: -90px; left: -110px;
+      animation: drift1 26s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 380px; height: 380px;
+      background: #a8b0cc;
+      bottom: -110px; right: -90px;
+      animation: drift2 34s ease-in-out infinite alternate;
+    }
+    @keyframes drift1 { to { transform: translate(80px, 55px); } }
+    @keyframes drift2 { to { transform: translate(-70px, -45px); } }
+
 
     /* ── Card ── */
     .card-wrap {
@@ -96,12 +122,12 @@
 
     .card {
       position: relative;
-      width: 520px;
+      width: 584px;
       background: linear-gradient(160deg, #1f1f1f 0%, #191919 100%);
       border: 1px solid #2a2a2a;
       border-radius: 3px;
       overflow: hidden;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.55), 0 0 70px rgba(var(--accent-rgb), 0.05);
       transform-style: preserve-3d;
       transition: transform 0.15s ease-out, box-shadow 0.3s;
       will-change: transform;
@@ -157,8 +183,6 @@
       color: #4a4a4a;
       letter-spacing: 0.06em;
       user-select: none;
-      /* offset the dots so title is optically centered */
-      margin-right: 34px;
     }
 
     /* ── Profile ── */
@@ -349,7 +373,7 @@
     /* ── Links ── */
     .links-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 4px;
     }
 
@@ -548,6 +572,242 @@
     .enter-text .e-main    { color: var(--accent); }
     .enter-text .e-kaomoji { color: #555; }
 
+    /* ── help button + panel (top right) ── */
+    .help-btn {
+      position: fixed;
+      top: 14px;
+      right: 16px;
+      z-index: 60;
+      width: 28px;
+      height: 28px;
+      background: rgba(22,22,22,0.8);
+      border: 1px solid #2a2a2a;
+      border-radius: 2px;
+      color: #4a4a4a;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      padding: 0;
+      line-height: 1;
+    }
+    .help-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    .help-panel {
+      position: fixed;
+      top: 50px;
+      right: 16px;
+      z-index: 60;
+      width: 248px;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 2px;
+      padding: 12px 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      color: #777;
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .help-panel.open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    .help-h {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #3a3a3a;
+      letter-spacing: 0.08em;
+      margin: 10px 0 6px;
+    }
+    .help-h:first-child { margin-top: 0; }
+    .help-h::after { content: ''; flex: 1; height: 1px; background: #222; }
+
+    .help-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      line-height: 2;
+    }
+    .help-row .help-k { color: var(--accent); flex-shrink: 0; }
+    .help-row .help-d { color: #5e5e5e; text-align: right; }
+
+    .help-secret {
+      margin-top: 10px;
+      color: #383838;
+      font-style: italic;
+    }
+
+    /* ── status ping while online ── */
+    .status-dot.online::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      border: 1px solid #3ba55d;
+      animation: ping 2.6s ease-out infinite;
+    }
+    @keyframes ping {
+      0%        { transform: scale(0.6); opacity: 0.8; }
+      70%, 100% { transform: scale(1.9); opacity: 0; }
+    }
+
+    /* ── the wandering cat ── */
+    .walker {
+      position: fixed;
+      bottom: 10px;
+      left: 0;
+      z-index: 55;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: #4e4e4e;
+      cursor: pointer;
+      user-select: none;
+      transform: translateX(-80px);
+      transition: color 0.2s;
+      will-change: transform;
+    }
+    .walker:hover { color: var(--accent); }
+
+    /* ── footer kaomoji ── */
+    .kao { color: #2e2e2e; margin-left: 7px; user-select: none; }
+
+    /* ── border beam: accent light tracing the card edge ── */
+    @property --beam { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      border-radius: 3px;
+      padding: 1px;
+      background: conic-gradient(from var(--beam),
+        transparent 0deg, transparent 300deg,
+        rgba(var(--accent-rgb), 0.5) 335deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: beam 8s linear infinite;
+    }
+    @keyframes beam { to { --beam: 360deg; } }
+
+    /* ── equalizer bars ── */
+    .eq {
+      display: flex;
+      gap: 2px;
+      align-items: flex-end;
+      height: 12px;
+      margin-left: auto;
+      padding-left: 10px;
+      flex-shrink: 0;
+    }
+    .eq i {
+      width: 3px;
+      height: 4px;
+      background: var(--accent);
+      opacity: 0.75;
+      animation: eqb 1s ease-in-out infinite;
+    }
+    .eq i:nth-child(1) { animation-duration: 0.9s; }
+    .eq i:nth-child(2) { animation-duration: 1.15s; }
+    .eq i:nth-child(3) { animation-duration: 0.75s; }
+    .eq i:nth-child(4) { animation-duration: 1.3s; }
+    .eq.paused i { animation: none; height: 3px; opacity: 0.25; }
+    @keyframes eqb { 0%, 100% { height: 3px; } 50% { height: 12px; } }
+
+    /* ── terminal ── */
+    .terminal {
+      display: none;
+      padding: 11px 20px 12px;
+      border-bottom: 1px solid #202020;
+      background: rgba(0,0,0,0.35);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+    }
+    .terminal.open { display: block; }
+
+    .term-out {
+      max-height: 195px;
+      overflow-y: auto;
+      line-height: 1.8;
+      color: #777;
+      margin-bottom: 6px;
+      scrollbar-width: thin;
+      scrollbar-color: #2a2a2a transparent;
+    }
+    .term-out:empty { margin-bottom: 0; }
+    .term-out .t-acc  { color: var(--accent); }
+    .term-out .t-dim  { color: #444; }
+    .term-out .t-err  { color: #d4a5b8; }
+    .term-out .t-link {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(var(--accent-rgb), 0.4);
+    }
+    .t-fetch {
+      font-family: inherit;
+      font-size: inherit;
+      line-height: 1.6;
+      color: #777;
+      margin: 2px 0;
+    }
+
+    .term-input-row { display: flex; align-items: center; gap: 8px; }
+    .term-prompt { color: var(--accent); flex-shrink: 0; }
+    .term-input {
+      flex: 1;
+      min-width: 0;
+      background: none;
+      border: none;
+      outline: none;
+      color: #b0b0b0;
+      font-family: inherit;
+      font-size: inherit;
+      letter-spacing: 0.02em;
+      caret-color: var(--accent);
+    }
+
+    .tb-term {
+      background: none;
+      border: none;
+      width: 36px;
+      text-align: right;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      color: #4a4a4a;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s;
+    }
+    .tb-term:hover { color: var(--accent); }
+
+    .p-plat { color: #3e3e3e; }
+
+    /* ── boot log ── */
+    .boot-log {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      line-height: 2.1;
+      color: #666;
+      letter-spacing: 0.03em;
+      min-width: 250px;
+    }
+    .boot-log .b-ok  { color: #a5d4b8; }
+    .boot-log .b-acc { color: var(--accent); }
+    .boot-log .b-dim { color: #3e3e3e; }
+
+    /* ── glitch shake (rm -rf easter egg) ── */
+    @keyframes shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-3px); }
+      40%, 60% { transform: translateX(3px); }
+    }
+    .card.glitch { animation: shake 0.5s; }
+
     /* mobile */
     @media (max-width: 560px) {
       body {
@@ -570,14 +830,19 @@
       .vol-slider::-webkit-slider-thumb { width: 14px; height: 14px; }
       .vol-slider::-moz-range-thumb     { width: 14px; height: 14px; }
 
+      .help-panel { width: calc(100vw - 32px); }
+
       /* lighter effects on small screens */
-      body::after { display: none; }             /* no scanlines */
+      .orb { display: none; }                    /* no blur cost on phones */
       #snow { opacity: 0.35; }
     }
 
     /* respect reduced-motion preferences everywhere */
     @media (prefers-reduced-motion: reduce) {
-      .card-wrap, .music-note, .cursor, .tw-cursor { animation: none; }
+      .card-wrap, .music-note, .cursor, .tw-cursor, .eq i { animation: none; }
+      .status-dot.online::after { animation: none; opacity: 0; }
+      .orb { animation: none; }
+      .card::after { animation: none; }
       .card { transform: none !important; }
     }
   </style>
@@ -593,6 +858,34 @@
 
 <canvas id="snow" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.55;"></canvas>
 
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<span class="walker" id="walker" title="pet the cat">ᓚᘏᗢ</span>
+
+<button class="help-btn" id="help-btn" title="help" aria-label="help">?</button>
+<div class="help-panel" id="help-panel">
+  <div class="help-h">keys</div>
+  <div class="help-row"><span class="help-k">`</span><span class="help-d">open terminal</span></div>
+  <div class="help-row"><span class="help-k">space</span><span class="help-d">play / pause</span></div>
+  <div class="help-row"><span class="help-k">n / b</span><span class="help-d">next / prev track</span></div>
+  <div class="help-row"><span class="help-k">m</span><span class="help-d">mute</span></div>
+  <div class="help-row"><span class="help-k">↑ / ↓</span><span class="help-d">volume</span></div>
+  <div class="help-row"><span class="help-k">?</span><span class="help-d">this panel</span></div>
+  <div class="help-h">clicks</div>
+  <div class="help-row"><span class="help-k">titlebar dots</span><span class="help-d">change theme</span></div>
+  <div class="help-row"><span class="help-k">♫ note</span><span class="help-d">tint the snow</span></div>
+  <div class="help-row"><span class="help-k">prompt</span><span class="help-d">copy discord</span></div>
+  <div class="help-row"><span class="help-k">progress bar</span><span class="help-d">seek song</span></div>
+  <div class="help-row"><span class="help-k">the cat</span><span class="help-d">pet it when it wanders by</span></div>
+  <div class="help-row"><span class="help-k">wandering cat</span><span class="help-d">pet it</span></div>
+  <div class="help-h">terminal</div>
+  <div class="help-row"><span class="help-k">help</span><span class="help-d">list commands</span></div>
+  <div class="help-row"><span class="help-k">tab</span><span class="help-d">autocomplete</span></div>
+  <div class="help-row"><span class="help-k">ctrl+l</span><span class="help-d">clear terminal</span></div>
+  <div class="help-secret">…there's also a secret code :3</div>
+</div>
+
 <div id="yt-player" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;"></div>
 
 <div class="card-wrap">
@@ -603,6 +896,7 @@
       <span class="tb-dot d1" title="theme"></span><span class="tb-dot d2" title="theme"></span><span class="tb-dot d3" title="theme"></span>
     </div>
     <span class="tb-title" id="tb-title">tabby@nixos — ~/bio</span>
+    <button class="tb-term" id="tb-term" title="terminal (`)" aria-label="open terminal">&gt;_</button>
   </div>
 
   <div class="profile reveal">
@@ -628,13 +922,14 @@
     <div class="music-title-row">
       <span class="music-note" id="music-note" title="tint the snow">♫</span>
       <span class="music-title" id="music-title">click ▶ to play</span>
+      <span class="eq paused" id="eq"><i></i><i></i><i></i><i></i></span>
     </div>
     <div class="music-controls">
-      <button class="music-btn" id="prev-btn" title="previous">⏮</button>
-      <button class="music-btn" id="play-btn" title="play / pause">▶</button>
-      <button class="music-btn" id="next-btn" title="next">⏭</button>
+      <button class="music-btn" id="prev-btn" title="previous" aria-label="previous track">⏮</button>
+      <button class="music-btn" id="play-btn" title="play / pause" aria-label="play or pause">▶</button>
+      <button class="music-btn" id="next-btn" title="next" aria-label="next track">⏭</button>
       <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="1">
-      <button class="music-btn" id="mute-btn" title="mute / unmute">♪</button>
+      <button class="music-btn" id="mute-btn" title="mute / unmute" aria-label="mute or unmute">♪</button>
     </div>
     <div class="yt-progress" id="yt-progress" title="seek">
       <div class="yt-progress-fill" id="yt-progress-fill"></div>
@@ -672,14 +967,19 @@
       <a class="link-row" href="https://discord.gg/Q8ny86SRvs" target="_blank" rel="noopener">
         <span>server</span><span class="link-arrow">›</span>
       </a>
-      <a class="link-row" href="https://tabby.beauty" rel="noopener">
-        <span>tabby.beauty</span><span class="link-arrow">›</span>
-      </a>
+    </div>
+  </div>
+
+  <div class="terminal" id="terminal">
+    <div class="term-out" id="term-out"></div>
+    <div class="term-input-row">
+      <span class="term-prompt">[visitor@tabby]$</span>
+      <input class="term-input" id="term-input" autocomplete="off" autocapitalize="off" spellcheck="false" />
     </div>
   </div>
 
   <div class="footer reveal">
-    <span class="footer-left">tabby.beauty</span>
+    <span class="footer-left">tabby.beauty<span class="kao" id="kao"></span></span>
     <span class="footer-clock" id="footer-clock">--:--:--</span>
   </div>
 
@@ -753,9 +1053,11 @@
   const spotifyFill   = document.getElementById('spotify-bar-fill');
   const presenceLine  = document.getElementById('presence-line');
 
-  let spotifyTs = null;   // { start, end } for local progress interpolation
-  let gameStart = null;   // timestamp for elapsed game time
+  let spotifyTs = null;    // { start, end } for local progress interpolation
+  let gameStart = null;    // timestamp for elapsed game time
   let gameName  = null;
+  let gameDetails = null;  // rich presence detail line
+  let lastStatus  = 'offline';
 
   const STATUS_WORDS = { online: 'online', idle: 'away', dnd: 'do not disturb', offline: 'offline' };
 
@@ -779,8 +1081,13 @@
 
       // status dot + presence line
       const st = d.discord_status ?? 'offline';
+      lastStatus = STATUS_WORDS[st] ?? st;
       document.getElementById('status-dot').className = 'status-dot ' + st;
-      presenceLine.innerHTML = '// <span class="p-status">' + esc(STATUS_WORDS[st] ?? st) + '</span>';
+      const plat = d.active_on_discord_desktop ? 'desktop'
+                 : d.active_on_discord_mobile  ? 'phone'
+                 : d.active_on_discord_web     ? 'web' : null;
+      presenceLine.innerHTML = '// <span class="p-status">' + esc(lastStatus) + '</span>'
+                             + (plat ? ' <span class="p-plat">· on ' + plat + '</span>' : '');
 
       // avatar — pulled live from discord cdn, base64 stays as fallback
       const u = d.discord_user;
@@ -807,6 +1114,7 @@
       spotifyTs = null;
       gameStart = null;
       gameName  = null;
+      gameDetails = null;
       let html  = '';
 
       if (d.listening_to_spotify && d.spotify) {
@@ -814,8 +1122,10 @@
         if (d.spotify.timestamps) spotifyTs = d.spotify.timestamps;
       } else if (game) {
         gameName = game.name;
+        gameDetails = game.details || null;
         if (game.timestamps && game.timestamps.start) gameStart = game.timestamps.start;
         html = `<span class="a-label">playing</span> ${esc(game.name)}`
+             + (gameDetails ? ` <span class="a-time">— ${esc(gameDetails)}</span>` : '')
              + (gameStart ? ` <span class="a-time">· ${fmtElapsed(Date.now() - gameStart)}</span>` : '');
       } else if (custom && custom.state) {
         const emoji = custom.emoji && !custom.emoji.id ? esc(custom.emoji.name) + ' ' : '';
@@ -844,6 +1154,7 @@
     if (gameStart && gameName) {
       activityText.innerHTML =
         `<span class="a-label">playing</span> ${esc(gameName)}`
+        + (gameDetails ? ` <span class="a-time">— ${esc(gameDetails)}</span>` : '')
         + ` <span class="a-time">· ${fmtElapsed(Date.now() - gameStart)}</span>`;
     }
     // site player progress
@@ -977,8 +1288,9 @@
           setTimeout(updateTrackTitle, 500);
           // pause / resume the bobbing note
           const note = document.getElementById('music-note');
-          if (e.data === YT.PlayerState.PLAYING) note.classList.remove('paused');
-          else note.classList.add('paused');
+          const eq   = document.getElementById('eq');
+          if (e.data === YT.PlayerState.PLAYING) { note.classList.remove('paused'); eq.classList.remove('paused'); }
+          else { note.classList.add('paused'); eq.classList.add('paused'); }
         }
       }
     });
@@ -1003,6 +1315,15 @@
     else if (k === 'n') { document.getElementById('next-btn').click(); }
     else if (k === 'b') { document.getElementById('prev-btn').click(); }
     else if (k === 'm') { document.getElementById('mute-btn').click(); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const slider = document.getElementById('vol-slider');
+      let v = parseInt(slider.value) + (e.key === 'ArrowUp' ? 5 : -5);
+      v = Math.max(0, Math.min(100, v));
+      slider.value = v;
+      slider.dispatchEvent(new Event('input'));
+      showToast('vol <span class="t-accent">' + v + '%</span>');
+    }
   });
 
   // ── click the ♫ to tint the snow with your accent ──
@@ -1027,9 +1348,21 @@
     document.getElementById('play-btn').textContent = '⏸';
   });
 
-  // ── Enter overlay ──
+  // ── Enter overlay + boot sequence ──
   const overlay = document.getElementById('enter-overlay');
-  overlay.addEventListener('click', function() {
+  const BOOT_LINES = [
+    '<span class="b-dim">tabby.beauty</span> <span class="b-dim">v2</span>',
+    '[ <span class="b-ok">ok</span> ] mounting /home/tabby',
+    '[ <span class="b-ok">ok</span> ] starting wayland session',
+    '[ <span class="b-ok">ok</span> ] connecting to lanyard',
+    '[ <span class="b-ok">ok</span> ] loading playlist',
+    '[ <span class="b-ok">ok</span> ] snow.service started',
+    '<span class="b-acc">welcome :3</span>'
+  ];
+  let booting = false, bootDone = false;
+
+  function finishBoot() {
+    bootDone = true;
     overlay.classList.add('hidden');
     setTimeout(() => overlay.style.display = 'none', 500);
     // staggered section reveal
@@ -1039,12 +1372,17 @@
     card.classList.add('entered');
     hasEntered = true;
     typewriter();
+    // hint at the terminal (desktop only — phones have the >_ button)
+    setTimeout(() => {
+      if (window.innerWidth > 560) {
+        showToast('psst — <span class="t-accent">`</span> opens a terminal');
+      }
+    }, 2600);
     // start music now that we have user interaction
     if (ytReady) {
       ytPlayer.playVideo();
       document.getElementById('play-btn').textContent = '⏸';
     } else {
-      // player not ready yet — play as soon as it is
       var waitPlay = setInterval(() => {
         if (ytReady) {
           ytPlayer.playVideo();
@@ -1053,6 +1391,32 @@
         }
       }, 100);
     }
+  }
+
+  overlay.addEventListener('click', function() {
+    if (bootDone) return;
+    if (booting) { booting = false; finishBoot(); return; }  // click again = skip
+    booting = true;
+    // greet by visitor's local time of day
+    const hr = new Date().getHours();
+    const greet = hr < 5 ? 'good night' : hr < 12 ? 'good morning' : hr < 18 ? 'good afternoon' : 'good evening';
+    BOOT_LINES[BOOT_LINES.length - 1] = '<span class="b-acc">' + greet + ' :3</span>';
+    overlay.innerHTML = '<div class="boot-log" id="boot-log"></div>';
+    const log = document.getElementById('boot-log');
+    let i = 0;
+    (function next() {
+      if (!booting) return;
+      if (i < BOOT_LINES.length) {
+        const line = document.createElement('div');
+        line.innerHTML = BOOT_LINES[i];
+        log.appendChild(line);
+        i++;
+        setTimeout(next, i === BOOT_LINES.length ? 380 : 100 + Math.random() * 80);
+      } else {
+        booting = false;
+        finishBoot();
+      }
+    })();
   });
 
   // ── Player controls ──
@@ -1085,6 +1449,344 @@
     const btn = document.getElementById('mute-btn');
     if (v === 0) { ytPlayer.mute();   btn.textContent = '✕'; }
     else         { ytPlayer.unMute(); btn.textContent = '♪'; }
+  });
+
+  // ── help panel ──
+  const helpBtn   = document.getElementById('help-btn');
+  const helpPanel = document.getElementById('help-panel');
+
+  helpBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    helpPanel.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (helpPanel.classList.contains('open') && !helpPanel.contains(e.target)) {
+      helpPanel.classList.remove('open');
+    }
+  });
+
+  // ── footer kaomoji of the visit ──
+  const KAO = [':3', '^-^', '>_<', '-.-', '( ˘ω˘ )', '(¬‿¬)', 'ᓚᘏᗢ'];
+  document.getElementById('kao').textContent = KAO[Math.floor(Math.random() * KAO.length)];
+
+  // ── your personal visit counter (this device only) ──
+  const siteVisits = (parseInt(localStorage.getItem('visits') || '0') || 0) + 1;
+  localStorage.setItem('visits', siteVisits);
+
+  // ── the wandering cat ──
+  const walker = document.getElementById('walker');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let catWalking = false;
+
+  function catWalk() {
+    if (catWalking || reducedMotion) return;
+    if (document.hidden) { scheduleCat(); return; }   // don't waste walks on hidden tabs
+    catWalking = true;
+    const ltr = Math.random() < 0.5;                  // random direction
+    const dur = 14000 + Math.random() * 8000;
+    const a = -80, b = window.innerWidth + 80;
+    const from = ltr ? a : b, to = ltr ? b : a;
+    const t0 = performance.now();
+    (function step(t) {
+      const p = (t - t0) / dur;
+      if (p >= 1) {
+        walker.style.transform = 'translateX(-200px)';
+        catWalking = false;
+        scheduleCat();
+        return;
+      }
+      walker.style.transform = 'translateX(' + (from + (to - from) * p) + 'px) scaleX(' + (ltr ? 1 : -1) + ')';
+      requestAnimationFrame(step);
+    })(t0);
+  }
+
+  function scheduleCat() {
+    if (reducedMotion) return;
+    setTimeout(catWalk, 50000 + Math.random() * 110000);
+  }
+  setTimeout(catWalk, 18000 + Math.random() * 20000);  // first visit ~18-38s in
+
+  walker.addEventListener('click', () => {
+    const pets = (parseInt(localStorage.getItem('pets') || '0') || 0) + 1;
+    localStorage.setItem('pets', pets);
+    const MEOWS = ['meow :3', 'mrrp', 'purrrr ♡', 'mew!', ':3'];
+    showToast('<span class="t-accent">' + MEOWS[Math.floor(Math.random() * MEOWS.length)] + '</span>');
+  });
+
+  // ── mini terminal ──
+  const term      = document.getElementById('terminal');
+  const termOut   = document.getElementById('term-out');
+  const termInput = document.getElementById('term-input');
+  const pageStart = Date.now();
+  let termWelcomed = false;
+  const termHistory = [];
+  let histIdx = 0;
+
+  function termPrint(html) {
+    const d = document.createElement('div');
+    d.innerHTML = html;
+    termOut.appendChild(d);
+    termOut.scrollTop = termOut.scrollHeight;
+  }
+
+  function termToggle(open) {
+    const willOpen = (open === undefined) ? !term.classList.contains('open') : open;
+    term.classList.toggle('open', willOpen);
+    if (willOpen) {
+      if (!termWelcomed) {
+        termPrint('<span class="t-dim">welcome to tabby term — type</span> <span class="t-acc">help</span>');
+        termWelcomed = true;
+      }
+      termInput.focus();
+    }
+  }
+
+  const TERM_LINKS = {
+    github:  'https://github.com/glaceyawn',
+    youtube: 'https://www.youtube.com/@bisexualratt',
+    server:  'https://discord.gg/Q8ny86SRvs'
+  };
+
+  const COMMANDS = {
+    help() {
+      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · ls · open &lt;link&gt; · theme &lt;color&gt; · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · echo · date · uptime · history · clear · exit');
+    },
+    whoami() {
+      const ua = navigator.userAgent;
+      const os = /Windows/.test(ua) ? 'windows' : /Android/.test(ua) ? 'android'
+               : /iPhone|iPad/.test(ua) ? 'ios' : /Mac/.test(ua) ? 'macos'
+               : /Linux/.test(ua) ? 'linux' : '???';
+      const br = /Firefox/.test(ua) ? 'firefox' : /Edg\//.test(ua) ? 'edge'
+               : /Chrome/.test(ua) ? 'chrome' : /Safari/.test(ua) ? 'safari' : '???';
+      let tz = '???';
+      try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '???'; } catch (_) {}
+      termPrint('<span class="t-acc">visitor</span> <span class="t-dim">·</span> ' + os
+        + ' <span class="t-dim">·</span> ' + br
+        + ' <span class="t-dim">·</span> ' + screen.width + '×' + screen.height
+        + ' <span class="t-dim">·</span> ' + esc(tz));
+    },
+    neofetch() {
+      const song = lastTitle ? (lastTitle.length > 32 ? lastTitle.slice(0, 32) + '…' : lastTitle) : 'nothing';
+      termPrint(
+        '<pre class="t-fetch">' +
+        '  /\\_/\\     <span class="t-acc">' + esc(discordUsername || 'tabby') + '</span><span class="t-dim">@nixos</span>\n' +
+        ' ( o.o )    <span class="t-dim">─────────────</span>\n' +
+        '  &gt; ^ &lt;     <span class="t-dim">os</span>      nixos\n' +
+        '            <span class="t-dim">wm</span>      hyprland\n' +
+        '            <span class="t-dim">term</span>    kitty\n' +
+        '            <span class="t-dim">shell</span>   fish\n' +
+        '            <span class="t-dim">uptime</span>  ' + fmtElapsed(Date.now() - pageStart) + '\n' +
+        '            <span class="t-dim">visits</span>  ' + siteVisits + '\n' +
+        '            <span class="t-dim">pets</span>    ' + (parseInt(localStorage.getItem('pets') || '0') || 0) + '\n' +
+        '            <span class="t-dim">theme</span>   ' + ACCENTS[accentIdx][0] + '\n' +
+        '            <span class="t-dim">status</span>  ' + esc(lastStatus) + '\n' +
+        '            <span class="t-dim">song</span>    ' + esc(song) +
+        '</pre>'
+      );
+    },
+    ls() {
+      termPrint(Object.keys(TERM_LINKS).map(k =>
+        '<a class="t-link" href="' + TERM_LINKS[k] + '" target="_blank" rel="noopener">' + k + '/</a>'
+      ).join('&nbsp;&nbsp;'));
+    },
+    open(arg) {
+      if (arg && TERM_LINKS[arg]) {
+        window.open(TERM_LINKS[arg], '_blank');
+        termPrint('<span class="t-dim">opening ' + esc(arg) + '…</span>');
+      } else {
+        termPrint('<span class="t-err">no such link:</span> ' + esc(arg || '') + ' <span class="t-dim">— try ls</span>');
+      }
+    },
+    theme(arg) {
+      const idx = ACCENTS.findIndex(a => a[0] === arg);
+      if (idx === -1) {
+        termPrint('<span class="t-dim">themes:</span> ' + ACCENTS.map(a => a[0]).join(' · '));
+        return;
+      }
+      accentIdx = idx;
+      localStorage.setItem('accent', idx);
+      applyAccent();
+      termPrint('accent <span class="t-acc">→ ' + arg + '</span>');
+    },
+    play()  { document.getElementById('play-btn').click(); },
+    pause() { document.getElementById('play-btn').click(); },
+    next()  { document.getElementById('next-btn').click(); },
+    prev()  { document.getElementById('prev-btn').click(); },
+    mute()  { document.getElementById('mute-btn').click(); },
+    snow()  { document.getElementById('music-note').click(); },
+    uptime() { termPrint('up ' + fmtElapsed(Date.now() - pageStart)); },
+    echo(_, rest) { termPrint(esc(rest) || '<span class="t-dim">(nothing)</span>'); },
+    date() { termPrint(new Date().toString().toLowerCase()); },
+    vol(arg) {
+      const v = parseInt(arg);
+      if (isNaN(v) || v < 0 || v > 100) { termPrint('<span class="t-dim">usage: vol 0-100</span>'); return; }
+      const slider = document.getElementById('vol-slider');
+      slider.value = v;
+      slider.dispatchEvent(new Event('input'));
+      termPrint('vol <span class="t-acc">' + v + '%</span>');
+    },
+    song() {
+      if (!lastTitle) { termPrint('<span class="t-dim">nothing playing</span>'); return; }
+      let t = '';
+      if (ytPlayer && ytReady && ytPlayer.getDuration() > 0) {
+        t = ' <span class="t-dim">· ' + fmtTime(ytPlayer.getCurrentTime()) + ' / ' + fmtTime(ytPlayer.getDuration()) + '</span>';
+      }
+      termPrint('<span class="t-acc">♫</span> ' + esc(lastTitle) + t);
+    },
+    history() {
+      if (!termHistory.length) { termPrint('<span class="t-dim">no history</span>'); return; }
+      termHistory.forEach((c, i) => termPrint('<span class="t-dim">' + (i + 1) + '</span>&nbsp;&nbsp;' + esc(c)));
+    },
+    cowsay(_, rest) {
+      const msg = (rest || 'meow').slice(0, 40);
+      const bar = '─'.repeat(msg.length + 2);
+      termPrint('<pre class="t-fetch">' +
+        ' ╭' + bar + '╮\n' +
+        ' │ ' + esc(msg) + ' │\n' +
+        ' ╰' + bar + '╯\n' +
+        '    \\   /\\_/\\\n' +
+        '     \\ ( o.o )\n' +
+        '        &gt; ^ &lt;' +
+        '</pre>');
+    },
+    cls() { termOut.innerHTML = ''; },
+    async weather(_, rest) {
+      const q = (rest || '').trim();
+      if (!q) { termPrint('<span class="t-dim">usage: weather &lt;city&gt;</span>'); return; }
+      termPrint('<span class="t-dim">checking…</span>');
+      try {
+        const g = await (await fetch('https://geocoding-api.open-meteo.com/v1/search?count=1&name=' + encodeURIComponent(q))).json();
+        if (!g.results || !g.results.length) { termPrint('<span class="t-err">city not found:</span> ' + esc(q)); return; }
+        const loc = g.results[0];
+        const w = await (await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + loc.latitude + '&longitude=' + loc.longitude + '&current=temperature_2m,weather_code,wind_speed_10m')).json();
+        const c = w.current;
+        const WMO = {0:'clear',1:'mostly clear',2:'partly cloudy',3:'overcast',45:'fog',48:'fog',51:'drizzle',53:'drizzle',55:'drizzle',61:'rain',63:'rain',65:'heavy rain',66:'freezing rain',67:'freezing rain',71:'snow',73:'snow',75:'heavy snow',77:'snow',80:'showers',81:'showers',82:'heavy showers',85:'snow showers',86:'snow showers',95:'thunderstorm',96:'thunderstorm',99:'thunderstorm'};
+        termPrint('<span class="t-acc">' + esc(loc.name.toLowerCase()) + '</span>'
+          + ' <span class="t-dim">(' + esc((loc.country_code || '').toLowerCase()) + ')</span>'
+          + ' · ' + Math.round(c.temperature_2m) + '°c'
+          + ' · ' + (WMO[c.weather_code] || '???')
+          + ' · <span class="t-dim">wind ' + Math.round(c.wind_speed_10m) + ' km/h</span>');
+      } catch (_) { termPrint('<span class="t-err">weather service unreachable</span>'); }
+    },
+    visits() {
+      const pets = parseInt(localStorage.getItem('pets') || '0') || 0;
+      termPrint('you\'ve been here <span class="t-acc">' + siteVisits + '</span> time' + (siteVisits === 1 ? '' : 's')
+        + (pets ? ' <span class="t-dim">· cat petted ' + pets + '×</span>' : ''));
+    },
+    share() {
+      navigator.clipboard.writeText('https://tabby.beauty').then(() => {
+        termPrint('copied <span class="t-acc">tabby.beauty</span> ♡');
+      }).catch(() => termPrint('<span class="t-err">clipboard blocked</span>'));
+    },
+    cat() {
+      if (reducedMotion) { termPrint('<span class="t-dim">the cat is napping</span>'); return; }
+      if (catWalking) { termPrint('<span class="t-dim">the cat is already out there — look down</span>'); return; }
+      catWalk();
+      termPrint('<span class="t-acc">ᓚᘏᗢ</span> <span class="t-dim">here kitty…</span>');
+    },
+    async github() {
+      termPrint('<span class="t-dim">fetching…</span>');
+      try {
+        const r = await fetch('https://api.github.com/users/glaceyawn');
+        const j = await r.json();
+        termPrint('<span class="t-acc">glaceyawn</span> <span class="t-dim">·</span> '
+          + j.public_repos + ' repos <span class="t-dim">·</span> '
+          + j.followers + ' followers');
+      } catch (_) {
+        termPrint('<span class="t-err">github unreachable</span>');
+      }
+    },
+    clear() { termOut.innerHTML = ''; },
+    exit()  { termToggle(false); },
+    sudo()  { termPrint('<span class="t-err">visitor is not in the sudoers file. this incident will be reported</span> <span class="t-dim">:3</span>'); },
+    rm(arg) {
+      if (arg === '-rf' || arg === '-fr') {
+        termPrint('<span class="t-err">wiping filesystem…</span>');
+        card.classList.add('glitch');
+        setTimeout(() => {
+          card.classList.remove('glitch');
+          termPrint('<span class="t-acc">jk :3</span> <span class="t-dim">nothing happened</span>');
+        }, 600);
+      } else {
+        termPrint('<span class="t-dim">rm: missing operand</span>');
+      }
+    }
+  };
+
+  termInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const raw = termInput.value.trim();
+      termInput.value = '';
+      if (!raw) return;
+      termHistory.push(raw);
+      histIdx = termHistory.length;
+      termPrint('<span class="t-acc">$</span> ' + esc(raw));
+      const parts = raw.toLowerCase().split(/\s+/);
+      const cmd = parts[0];
+      const rest = raw.replace(/^\S+\s*/, '');
+      if (COMMANDS[cmd]) COMMANDS[cmd](parts[1], rest);
+      else termPrint('<span class="t-err">command not found:</span> ' + esc(cmd) + ' <span class="t-dim">— try help</span>');
+    } else if (e.key === 'ArrowUp') {
+      if (histIdx > 0) { histIdx--; termInput.value = termHistory[histIdx]; e.preventDefault(); }
+    } else if (e.key === 'ArrowDown') {
+      if (histIdx < termHistory.length - 1) { histIdx++; termInput.value = termHistory[histIdx]; }
+      else { histIdx = termHistory.length; termInput.value = ''; }
+    } else if (e.key === 'Tab') {
+      e.preventDefault();
+      const v = termInput.value.trim().toLowerCase();
+      if (v) {
+        const matches = Object.keys(COMMANDS).filter(c => c.startsWith(v));
+        if (matches.length === 1) termInput.value = matches[0] + ' ';
+        else if (matches.length > 1) termPrint('<span class="t-dim">' + matches.join(' · ') + '</span>');
+      }
+    } else if (e.key === 'l' && e.ctrlKey) {
+      e.preventDefault();
+      termOut.innerHTML = '';
+    } else if (e.key === 'Escape') {
+      termToggle(false);
+    }
+    e.stopPropagation();
+  });
+
+  document.getElementById('tb-term').addEventListener('click', () => termToggle());
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '`' && e.target.tagName !== 'INPUT') { e.preventDefault(); termToggle(); }
+    else if (e.key === '?' && e.target.tagName !== 'INPUT') { helpPanel.classList.toggle('open'); }
+    else if (e.key === 'Escape') { termToggle(false); helpPanel.classList.remove('open'); }
+  });
+
+  // ── konami → snowstorm ──
+  const KONAMI = ['arrowup','arrowup','arrowdown','arrowdown','arrowleft','arrowright','arrowleft','arrowright','b','a'];
+  let konamiIdx = 0;
+
+  document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT') return;
+    const k = e.key.toLowerCase();
+    konamiIdx = (k === KONAMI[konamiIdx]) ? konamiIdx + 1 : (k === KONAMI[0] ? 1 : 0);
+    if (konamiIdx === KONAMI.length) {
+      konamiIdx = 0;
+      snowstorm();
+    }
+  });
+
+  function snowstorm() {
+    showToast('<span class="t-accent">❄ snowstorm</span>');
+    const prevTint = snowAccent;
+    snowAccent = true;
+    flakes = Array.from({ length: 380 }, makeFlake).map(f => (f.speed *= 3.2, f));
+    setTimeout(() => {
+      flakes = Array.from({ length: 120 }, makeFlake);
+      snowAccent = prevTint;
+    }, 8000);
+  }
+
+  // second secret: tap the footer kaomoji 7 times (phone-friendly)
+  let kaoTaps = 0, kaoTimer;
+  document.getElementById('kao').addEventListener('click', () => {
+    kaoTaps++;
+    clearTimeout(kaoTimer);
+    kaoTimer = setTimeout(() => { kaoTaps = 0; }, 1500);
+    if (kaoTaps >= 7) { kaoTaps = 0; snowstorm(); }
   });
 
   // ── Snow ──
