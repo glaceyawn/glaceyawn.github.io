@@ -783,6 +783,7 @@
       transition: color 0.15s;
     }
     .tb-term:hover { color: var(--accent); }
+    .tb-help { display: none; width: 22px; }
 
     .p-plat { color: #3e3e3e; }
 
@@ -830,7 +831,9 @@
       .vol-slider::-webkit-slider-thumb { width: 14px; height: 14px; }
       .vol-slider::-moz-range-thumb     { width: 14px; height: 14px; }
 
-      .help-panel { width: calc(100vw - 32px); }
+      .help-btn { display: none; }               /* corner button collides with the card */
+      .tb-help { display: inline-block; }        /* help lives in the titlebar instead */
+      .help-panel { width: calc(100vw - 32px); top: 16px; }
 
       /* lighter effects on small screens */
       .orb { display: none; }                    /* no blur cost on phones */
@@ -897,6 +900,7 @@
     </div>
     <span class="tb-title" id="tb-title">tabby@nixos — ~/bio</span>
     <button class="tb-term" id="tb-term" title="terminal (`)" aria-label="open terminal">&gt;_</button>
+    <button class="tb-term tb-help" id="tb-help" title="help" aria-label="help">?</button>
   </div>
 
   <div class="profile reveal">
@@ -921,13 +925,13 @@
     <div class="section-label">now playing</div>
     <div class="music-title-row">
       <span class="music-note" id="music-note" title="tint the snow">♫</span>
-      <span class="music-title" id="music-title">click ▶ to play</span>
+      <span class="music-title" id="music-title">click ▶︎ to play</span>
       <span class="eq paused" id="eq"><i></i><i></i><i></i><i></i></span>
     </div>
     <div class="music-controls">
-      <button class="music-btn" id="prev-btn" title="previous" aria-label="previous track">⏮</button>
-      <button class="music-btn" id="play-btn" title="play / pause" aria-label="play or pause">▶</button>
-      <button class="music-btn" id="next-btn" title="next" aria-label="next track">⏭</button>
+      <button class="music-btn" id="prev-btn" title="previous" aria-label="previous track">⏮︎</button>
+      <button class="music-btn" id="play-btn" title="play / pause" aria-label="play or pause">▶︎</button>
+      <button class="music-btn" id="next-btn" title="next" aria-label="next track">⏭︎</button>
       <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="1">
       <button class="music-btn" id="mute-btn" title="mute / unmute" aria-label="mute or unmute">♪</button>
     </div>
@@ -1311,6 +1315,8 @@
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     if (!hasEntered) return;
     const k = e.key.toLowerCase();
+    // halfway into the konami sequence? give the keys to the code, not the player
+    if (konamiIdx >= 4 && k === KONAMI[konamiIdx]) return;
     if (k === ' ')      { e.preventDefault(); document.getElementById('play-btn').click(); }
     else if (k === 'n') { document.getElementById('next-btn').click(); }
     else if (k === 'b') { document.getElementById('prev-btn').click(); }
@@ -1339,13 +1345,13 @@
   document.getElementById('prev-btn').addEventListener('click', function() {
     if (!ytPlayer || !ytReady) return;
     ytPlayer.previousVideo();
-    document.getElementById('play-btn').textContent = '⏸';
+    document.getElementById('play-btn').textContent = '⏸︎';
   });
 
   document.getElementById('next-btn').addEventListener('click', function() {
     if (!ytPlayer || !ytReady) return;
     ytPlayer.nextVideo();
-    document.getElementById('play-btn').textContent = '⏸';
+    document.getElementById('play-btn').textContent = '⏸︎';
   });
 
   // ── Enter overlay + boot sequence ──
@@ -1381,12 +1387,12 @@
     // start music now that we have user interaction
     if (ytReady) {
       ytPlayer.playVideo();
-      document.getElementById('play-btn').textContent = '⏸';
+      document.getElementById('play-btn').textContent = '⏸︎';
     } else {
       var waitPlay = setInterval(() => {
         if (ytReady) {
           ytPlayer.playVideo();
-          document.getElementById('play-btn').textContent = '⏸';
+          document.getElementById('play-btn').textContent = '⏸︎';
           clearInterval(waitPlay);
         }
       }, 100);
@@ -1424,10 +1430,10 @@
     if (!ytPlayer || !ytReady) return;
     if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
       ytPlayer.pauseVideo();
-      this.textContent = '▶';
+      this.textContent = '▶︎';
     } else {
       ytPlayer.playVideo();
-      this.textContent = '⏸';
+      this.textContent = '⏸︎';
     }
   });
 
@@ -1456,6 +1462,10 @@
   const helpPanel = document.getElementById('help-panel');
 
   helpBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    helpPanel.classList.toggle('open');
+  });
+  document.getElementById('tb-help').addEventListener('click', (e) => {
     e.stopPropagation();
     helpPanel.classList.toggle('open');
   });
