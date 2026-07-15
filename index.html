@@ -35,7 +35,7 @@
       overflow: hidden;
     }
 
-    /* ── vignette ── */
+    /* vignette */
     body::before {
       content: '';
       position: fixed;
@@ -45,7 +45,7 @@
       background: radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,0.52) 100%);
     }
 
-    /* ── ambient orbs drifting behind everything ── */
+    /* ambient orbs drifting behind everything */
     .orb {
       position: fixed;
       border-radius: 50%;
@@ -78,7 +78,7 @@
     }
     @keyframes drift3 { to { transform: translate(-70px, 60px); } }
 
-    /* ── aurora ribbon across the top ── */
+    /* aurora ribbon across the top */
     .aurora {
       position: fixed;
       top: -170px;
@@ -102,7 +102,7 @@
     }
 
 
-    /* ── Card ── */
+    /* card */
     .card-wrap {
       position: relative;
       z-index: 1;
@@ -110,7 +110,7 @@
       animation: floaty 6s ease-in-out infinite;
     }
 
-    /* ── explorer: left-edge drawer ── */
+    /* explorer: left-edge drawer */
     .explorer {
       position: fixed;
       left: 14px;
@@ -177,7 +177,7 @@
       50%      { transform: translateY(-5px); }
     }
 
-    /* ── staggered section reveal (triggers on enter) ── */
+    /* staggered section reveal (triggers on enter) */
     .reveal {
       opacity: 0;
       transform: translateY(10px);
@@ -188,7 +188,7 @@
       transform: translateY(0);
     }
 
-    /* ── toast ── */
+    /* toast */
     .toast {
       position: fixed;
       bottom: 28px;
@@ -229,7 +229,33 @@
       will-change: transform;
     }
 
-    /* purple glow spot that follows the cursor */
+    /* glass sheen sweeping the card */
+    .sheen {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 3px;
+    }
+    .sheen::before {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -80%;
+      width: 55%;
+      height: 220%;
+      transform: rotate(20deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.026), transparent);
+      animation: sheenmove 14s ease-in-out infinite;
+    }
+    @keyframes sheenmove {
+      0%, 74% { left: -80%; }
+      90%     { left: 135%; }
+      100%    { left: 135%; }
+    }
+
+    /* hover glow */
     .card::before {
       content: '';
       position: absolute;
@@ -247,7 +273,7 @@
     .card:hover::before { opacity: 1; }
     .card > * { position: relative; z-index: 1; }
 
-    /* ── Titlebar ── */
+    /* titlebar */
     .titlebar {
       display: flex;
       align-items: center;
@@ -281,7 +307,7 @@
       user-select: none;
     }
 
-    /* ── Profile ── */
+    /* profile */
     .profile {
       display: flex;
       align-items: center;
@@ -306,7 +332,7 @@
     .avatar-wrap:hover .avatar { box-shadow: 0 0 0 3px rgba(var(--accent-rgb),0.3), 0 0 18px rgba(var(--accent-rgb),0.25); transform: scale(1.04); }
     .avatar { transition: box-shadow 0.3s, transform 0.3s; }
 
-    /* status ring dot sits on the avatar now */
+
     .status-dot {
       position: absolute;
       right: 0;
@@ -318,6 +344,10 @@
       border: 3px solid #1c1c1c;
       transition: background 0.4s, box-shadow 0.4s;
     }
+    .avatar-wrap[data-st="online"] .avatar { box-shadow: 0 0 0 3px rgba(59,165,93,0.22); }
+    .avatar-wrap[data-st="idle"]   .avatar { box-shadow: 0 0 0 3px rgba(250,166,26,0.2); }
+    .avatar-wrap[data-st="dnd"]    .avatar { box-shadow: 0 0 0 3px rgba(237,66,69,0.22); }
+
     .status-dot.online  { background: #3ba55d; box-shadow: 0 0 6px rgba(59,165,93,0.6); }
     .status-dot.idle    { background: #faa61a; box-shadow: 0 0 6px rgba(250,166,26,0.5); }
     .status-dot.dnd     { background: #ed4245; box-shadow: 0 0 6px rgba(237,66,69,0.5); }
@@ -365,7 +395,7 @@
     }
     .presence-line .p-status { color: #6e6e6e; }
 
-    /* ── Activity ── */
+    /* activity */
     .activity {
       display: none;
       padding: 11px 20px;
@@ -373,7 +403,23 @@
       background: rgba(0,0,0,0.15);
     }
 
+    .activity-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .activity-art {
+      width: 26px;
+      height: 26px;
+      border-radius: 2px;
+      border: 1px solid #2a2a2a;
+      object-fit: cover;
+      display: none;
+      flex-shrink: 0;
+    }
+
     .activity-text {
+      min-width: 0;
       font-size: 0.66rem;
       font-weight: 300;
       color: #6e6e6e;
@@ -400,7 +446,7 @@
       transition: width 1s linear;
     }
 
-    /* ── Section ── */
+    /* section */
     .section {
       padding: 14px 20px;
       border-bottom: 1px solid #202020;
@@ -416,7 +462,9 @@
       text-transform: lowercase;
       letter-spacing: 0.08em;
       margin-bottom: 9px;
+      transition: color 0.2s;
     }
+    .section:hover .section-label { color: rgba(var(--accent-rgb), 0.6); }
 
     .section-label::after {
       content: '';
@@ -425,7 +473,7 @@
       background: #222;
     }
 
-    /* ── About (typewriter) ── */
+    /* about (typewriter) */
     .about-text {
       font-size: 0.72rem;
       font-weight: 300;
@@ -444,7 +492,7 @@
       animation: blink 1s steps(1) infinite;
     }
 
-    /* ── Langs ── */
+    /* langs */
     .tags { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .tag {
@@ -466,41 +514,74 @@
     .tag[data-c="3"]:hover { border-color: #d4a5b8; color: #d4a5b8; box-shadow: 0 0 10px rgba(212,165,184,0.15); }
     .tag[data-c="4"]:hover { border-color: #a5d4b8; color: #a5d4b8; box-shadow: 0 0 10px rgba(165,212,184,0.15); }
 
-    /* ── file explorer ── */
+    /* file explorer */
     .vfs {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem;
-      line-height: 2.1;
+      line-height: 1.95;
     }
     .vfs-row {
       display: flex;
       align-items: center;
-      gap: 8px;
       cursor: pointer;
       color: #5e5e5e;
-      transition: color 0.12s;
+      white-space: pre;
+      padding: 1px 5px;
+      margin: 0 -5px;
+      border-radius: 2px;
+      transition: background 0.12s, color 0.12s;
       user-select: none;
     }
-    .vfs-row:hover { color: #c8c8c8; }
-    .vfs-row .v-icon { color: #3a3a3a; width: 10px; flex-shrink: 0; }
+    .vfs-row:hover { background: rgba(var(--accent-rgb), 0.07); color: #c8c8c8; }
+    .vfs-row.active .v-name { color: var(--accent); }
+    .vfs-row .v-pre { color: #333; }
+    .vfs-row .v-icon { color: #3a3a3a; width: 13px; flex-shrink: 0; }
     .vfs-row.v-dir .v-name { color: var(--accent); opacity: 0.85; }
     .vfs-children { display: none; }
-    .vfs-children.open { display: block; }
+    .vfs-children.open { display: block; animation: vfsin 0.16s ease; }
+    @keyframes vfsin {
+      from { opacity: 0; transform: translateY(-3px); }
+      to   { opacity: 1; transform: none; }
+    }
     .vfs-file-view {
       display: none;
-      margin: 3px 0 7px;
-      padding: 8px 11px;
-      border: 1px solid #242424;
-      border-left: 2px solid rgba(var(--accent-rgb), 0.5);
-      background: rgba(0,0,0,0.25);
+      margin: 4px 0 8px;
+      padding: 7px 10px 8px;
+      background: #141414;
+      border: 1px solid #232323;
+      border-left: 2px solid rgba(var(--accent-rgb), 0.55);
+      border-radius: 2px;
       color: #6e6e6e;
       white-space: pre-wrap;
       line-height: 1.85;
       font-size: 0.58rem;
     }
-    .vfs-file-view.open { display: block; }
+    .vfs-file-view.open { display: block; animation: vfsin 0.16s ease; }
+    .vfs-file-view .vf-name {
+      display: block;
+      color: #3f3f3f;
+      font-size: 0.52rem;
+      letter-spacing: 0.07em;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid #202020;
+    }
+    .explorer-status {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 13px;
+      border-top: 1px solid #232323;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.52rem;
+      color: #3a3a3a;
+      letter-spacing: 0.05em;
+      user-select: none;
+    }
+    .explorer-titlebar { cursor: grab; }
+    .explorer-titlebar:active { cursor: grabbing; }
+    .explorer.dragging { transition: none; }
 
-    /* ── rig ── */
+    /* rig */
     .rig-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -518,7 +599,7 @@
     .rig-item .r-v { color: #6e6e6e; transition: color 0.15s; }
     .rig-item:hover .r-v { color: var(--accent); }
 
-    /* ── live sys monitor ── */
+    /* live sys monitor */
     .sys-line {
       display: flex;
       flex-wrap: wrap;
@@ -552,7 +633,7 @@
       background: linear-gradient(90deg, var(--accent), #a8b0cc);
     }
 
-    /* ── Links ── */
+    /* links */
     .links-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -591,7 +672,7 @@
       transition: opacity 0.12s, color 0.12s;
     }
 
-    /* ── Music + footer row ── */
+    /* music + footer row */
     .music-title-row {
       display: flex;
       align-items: center;
@@ -613,6 +694,7 @@
     .music-note { cursor: pointer; }
 
     .yt-progress {
+      position: relative;
       margin-top: 9px;
       height: 3px;
       background: #2a2a2a;
@@ -621,6 +703,23 @@
       cursor: pointer;
     }
     .yt-progress:hover { height: 5px; margin-top: 7px; }
+    .seek-tip {
+      position: absolute;
+      top: -24px;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.52rem;
+      color: #888;
+      background: #161616;
+      border: 1px solid #2a2a2a;
+      border-radius: 2px;
+      padding: 2px 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s;
+      white-space: nowrap;
+    }
+    .yt-progress:hover .seek-tip { opacity: 1; }
 
     .yt-progress-fill {
       height: 100%;
@@ -729,7 +828,7 @@
       border: none;
     }
 
-    /* ── Footer ── */
+    /* footer */
     .footer {
       padding: 9px 20px;
       display: flex;
@@ -742,7 +841,7 @@
     .footer-left  { font-size: 0.56rem; color: #383838; letter-spacing: 0.04em; }
     .footer-clock { font-size: 0.56rem; color: var(--accent); opacity: 0.55; letter-spacing: 0.06em; }
 
-    /* ── Enter overlay ── */
+    /* enter overlay */
     @keyframes pulse {
       0%, 100% { opacity: 1; }
       50%       { opacity: 0.4; }
@@ -764,22 +863,126 @@
 
     #enter-overlay.hidden { opacity: 0; pointer-events: none; }
 
-    .enter-text {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 300;
-      color: #666;
-      letter-spacing: 0.12em;
-      text-transform: lowercase;
-      animation: pulse 2.4s ease-in-out infinite;
+    .greeter {
+      width: 304px;
+      background: linear-gradient(160deg, #1f1f1f 0%, #191919 100%);
+      border: 1px solid #2a2a2a;
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: 0 12px 44px rgba(0,0,0,0.6), 0 0 60px rgba(var(--accent-rgb), 0.06);
+      animation: greeterin 0.5s ease;
+      transition: border-color 0.3s, box-shadow 0.3s;
       user-select: none;
     }
+    #enter-overlay:hover .greeter {
+      border-color: rgba(var(--accent-rgb), 0.4);
+      box-shadow: 0 12px 44px rgba(0,0,0,0.6), 0 0 74px rgba(var(--accent-rgb), 0.12);
+    }
+    @keyframes greeterin {
+      from { opacity: 0; transform: translateY(12px) scale(0.97); }
+      to   { opacity: 1; transform: none; }
+    }
 
-    .enter-text .e-bracket { color: #333; }
-    .enter-text .e-main    { color: var(--accent); }
-    .enter-text .e-kaomoji { color: #555; }
+    .greeter-bar {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 13px;
+      background: rgba(0,0,0,0.3);
+      border-bottom: 1px solid #262626;
+    }
+    .greeter-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.56rem;
+      color: #4a4a4a;
+      letter-spacing: 0.06em;
+    }
 
-    /* ── help button + panel (top right) ── */
+    .greeter-body {
+      position: relative;
+      padding: 28px 20px 26px;
+      text-align: center;
+    }
+    .greeter-kao {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: rgba(var(--accent-rgb), 0.55);
+      margin-bottom: 11px;
+      animation: gbreathe 4.5s ease-in-out infinite;
+    }
+    @keyframes gbreathe {
+      0%, 100% { opacity: 0.45; }
+      50%      { opacity: 0.9; }
+    }
+
+    .greeter-line {
+      width: 56%;
+      height: 1px;
+      margin: 13px auto;
+      background: linear-gradient(90deg,
+        transparent, rgba(var(--accent-rgb), 0.4), transparent);
+    }
+    .greeter-host {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.94rem;
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      color: #b4bacf;
+    }
+    .greeter-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.57rem;
+      letter-spacing: 0.05em;
+      color: #4e4e4e;
+      margin-bottom: 17px;
+    }
+    .greeter .g-dim { color: #3a3a3a; }
+    .greeter .g-acc { color: var(--accent); }
+    .greeter-btn {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+      color: #777;
+      letter-spacing: 0.08em;
+      padding: 8px 20px;
+      border: 1px solid #2c2c2c;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.2);
+      transition: border-color 0.2s, background 0.2s, color 0.2s, transform 0.2s;
+    }
+    #enter-overlay:hover .greeter-btn {
+      border-color: rgba(var(--accent-rgb), 0.55);
+      background: rgba(var(--accent-rgb), 0.07);
+      color: #c8c8c8;
+      transform: translateY(-1px);
+    }
+
+    /* accent ring tracing the greeter edge */
+    .greeter { position: relative; }
+    .greeter::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      border-radius: 3px;
+      padding: 1px;
+      background: conic-gradient(from var(--beam),
+        transparent 0deg, transparent 290deg,
+        rgba(var(--accent-rgb), 0.7) 330deg, transparent 360deg);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: beam 5s linear infinite;
+    }
+    .greeter-body .boot-log {
+      text-align: left;
+      min-width: 0;
+      font-size: 0.62rem;
+    }
+
+    /* help button + panel (top right) */
     .help-btn {
       position: fixed;
       top: 14px;
@@ -846,7 +1049,7 @@
       font-style: italic;
     }
 
-    /* ── status ping while online ── */
+    /* status ping while online */
     .status-dot.online::after {
       content: '';
       position: absolute;
@@ -860,7 +1063,7 @@
       70%, 100% { transform: scale(1.9); opacity: 0; }
     }
 
-    /* ── viewfinder corner brackets ── */
+    /* viewfinder corner brackets */
     .corner {
       position: fixed;
       width: 22px;
@@ -869,12 +1072,10 @@
       pointer-events: none;
       border: 0 solid rgba(var(--accent-rgb), 0.3);
     }
-    .c-tl { top: 14px;    left: 14px;  border-top-width: 1px;    border-left-width: 1px; }
-    .c-tr { top: 14px;    right: 14px; border-top-width: 1px;    border-right-width: 1px; }
-    .c-bl { bottom: 14px; left: 14px;  border-bottom-width: 1px; border-left-width: 1px; }
-    .c-br { bottom: 14px; right: 14px; border-bottom-width: 1px; border-right-width: 1px; }
+    .c-tl { top: 14px; left: 14px;  border-top-width: 1px; border-left-width: 1px; }
+    .c-tr { top: 14px; right: 14px; border-top-width: 1px; border-right-width: 1px; }
 
-    /* ── click ripple ── */
+    /* click ripple */
     .ripple {
       position: fixed;
       border: 1px solid rgba(var(--accent-rgb), 0.5);
@@ -889,7 +1090,72 @@
       to   { width: 46px; height: 46px; opacity: 0; }
     }
 
-    /* ── cursor trail ── */
+    /* moon */
+    .moon {
+      position: fixed;
+      top: 74px;
+      right: 9%;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 38% 38%, #3b3b42, #26262b 68%);
+      box-shadow: 0 0 46px rgba(200, 206, 224, 0.09), inset -7px -7px 14px rgba(0,0,0,0.35);
+      opacity: 0.85;
+    }
+    .moon::before, .moon::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.16);
+    }
+    .moon::before { width: 9px; height: 9px; top: 14px; left: 13px; }
+    .moon::after  { width: 6px; height: 6px; top: 31px; left: 29px; }
+
+    /* fog */
+    .fog {
+      position: fixed;
+      left: -20%;
+      width: 140%;
+      height: 210px;
+      z-index: 0;
+      pointer-events: none;
+      filter: blur(52px);
+      background: linear-gradient(90deg,
+        transparent, #8b93ad 28%, transparent 55%, #8b93ad 82%, transparent);
+      opacity: 0.05;
+    }
+    .fog-1 { top: 20%; animation: fogmove 95s linear infinite alternate; }
+    .fog-2 { top: 58%; animation: fogmove 140s linear infinite alternate-reverse; opacity: 0.038; }
+    @keyframes fogmove {
+      from { transform: translateX(-9%); }
+      to   { transform: translateX(9%); }
+    }
+
+    /* frost at the bottom edge */
+    .frost {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      z-index: 2;
+      pointer-events: none;
+      background: linear-gradient(to top, rgba(220, 228, 245, 0.05), transparent);
+    }
+
+    /* lightning (rain mode) */
+    .flash {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      pointer-events: none;
+      background: #ccd3e8;
+      opacity: 0;
+    }
+
+    /* cursor trail */
     .trail-dot {
       position: fixed;
       width: 4px;
@@ -905,7 +1171,7 @@
       to   { opacity: 0;   transform: scale(0.2) translateY(6px); }
     }
 
-    /* ── idle screensaver ── */
+    /* idle screensaver */
     .saver {
       position: fixed;
       inset: 0;
@@ -939,7 +1205,7 @@
       user-select: none;
     }
 
-    /* ── ascii plants ── */
+    /* ascii plants */
     .plants {
       position: fixed;
       bottom: 4px;
@@ -962,7 +1228,7 @@
       to   { transform: rotate(1.3deg); }
     }
 
-    /* ── the zoomie (secret #4) ── */
+    /* the zoomie (secret #4) */
     .zoomie {
       position: fixed;
       top: 50%;
@@ -990,7 +1256,7 @@
       to   { transform: translate(-50%, -130vh) rotate(4deg); }
     }
 
-    /* ── the wandering cat ── */
+    /* the wandering cat */
     .walker {
       position: fixed;
       bottom: 10px;
@@ -1007,10 +1273,10 @@
     }
     .walker:hover { color: var(--accent); }
 
-    /* ── footer kaomoji ── */
+    /* footer kaomoji */
     .kao { color: #2e2e2e; margin-left: 7px; user-select: none; }
 
-    /* ── border beam: accent light tracing the card edge ── */
+    /* border beam: accent light tracing the card edge */
     @property --beam { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
     .card::after {
       content: '';
@@ -1031,7 +1297,7 @@
     }
     @keyframes beam { to { --beam: 360deg; } }
 
-    /* ── equalizer bars ── */
+    /* equalizer bars */
     .eq {
       display: flex;
       gap: 2px;
@@ -1055,7 +1321,7 @@
     .eq.paused i { animation: none; height: 3px; opacity: 0.25; }
     @keyframes eqb { 0%, 100% { height: 3px; } 50% { height: 12px; } }
 
-    /* ── terminal ── */
+    /* terminal */
     .terminal {
       display: none;
       padding: 11px 20px 12px;
@@ -1124,7 +1390,7 @@
 
     .p-plat { color: #3e3e3e; }
 
-    /* ── boot log ── */
+    /* boot log */
     .boot-log {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.66rem;
@@ -1137,7 +1403,7 @@
     .boot-log .b-acc { color: var(--accent); }
     .boot-log .b-dim { color: #3e3e3e; }
 
-    /* ── glitch shake (rm -rf easter egg) ── */
+    /* glitch shake (rm -rf easter egg) */
     @keyframes shake {
       10%, 90% { transform: translateX(-1px); }
       20%, 80% { transform: translateX(2px); }
@@ -1155,13 +1421,13 @@
       }
 
       .card { width: calc(100vw - 28px); }
-      .card-wrap { animation: none; }            /* no float on phones */
-      .card { transform: none !important; }      /* no tilt on phones */
+      .card-wrap { animation: none; }
+      .card { transform: none !important; }
 
       .links-grid { grid-template-columns: 1fr; }
       .rig-grid { grid-template-columns: repeat(2, 1fr); }
 
-      /* comfier tap targets */
+      /* touch targets */
       .music-btn { width: 34px; height: 34px; font-size: 0.65rem; }
       .link-row  { padding: 10px 12px; }
       .tag       { padding: 7px 12px; }
@@ -1169,24 +1435,27 @@
       .vol-slider::-webkit-slider-thumb { width: 14px; height: 14px; }
       .vol-slider::-moz-range-thumb     { width: 14px; height: 14px; }
 
-      .help-btn { display: none; }               /* corner button collides with the card */
-      .tb-help { display: inline-block; }        /* help lives in the titlebar instead */
+      .help-btn { display: none; }
+      .tb-help { display: inline-block; }
       .help-panel { width: calc(100vw - 32px); top: 16px; }
+      .greeter { width: min(304px, calc(100vw - 48px)); }
 
-      /* lighter effects on small screens */
-      .orb { display: none; }                    /* no blur cost on phones */
+      .orb { display: none; }
       .aurora { display: none; }
+      .fog { display: none; }
       .corner { display: none; }
       .plants { display: none; }
       #snow { opacity: 0.35; }
     }
 
-    /* respect reduced-motion preferences everywhere */
+    /* reduced motion */
     @media (prefers-reduced-motion: reduce) {
       .card-wrap, .explorer, .music-note, .cursor, .tw-cursor, .eq i { animation: none; }
       .status-dot.online::after { animation: none; opacity: 0; }
       .orb { animation: none; }
       .aurora { animation: none; }
+      .fog { animation: none; }
+      .sheen::before { animation: none; }
       .plants { animation: none; }
       .zoomie[class*="go-"] { animation: none; }
       .card::after { animation: none; }
@@ -1198,9 +1467,19 @@
 
 <!-- enter overlay -->
 <div id="enter-overlay">
-  <span class="enter-text">
-    <span class="e-bracket">[</span><span class="e-main">click 2 entr! </span><span class="e-kaomoji">:3</span><span class="e-bracket">]</span>
-  </span>
+  <div class="greeter">
+    <div class="greeter-bar">
+      <span class="tb-dot d1"></span><span class="tb-dot d2"></span><span class="tb-dot d3"></span>
+      <span class="greeter-title">login</span>
+    </div>
+    <div class="greeter-body" id="greeter-body">
+      <div class="greeter-kao">ᓚᘏᗢ</div>
+      <div class="greeter-host">tabby<span class="g-acc">.beauty</span></div>
+      <div class="greeter-line"></div>
+      <div class="greeter-meta"><span id="greeter-greet">hello</span>, visitor <span class="g-acc">♡</span></div>
+      <span class="greeter-btn">click 2 entr! <span class="g-acc">:3</span></span>
+    </div>
+  </div>
 </div>
 
 <canvas id="snow" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.55;"></canvas>
@@ -1209,10 +1488,13 @@
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
 <div class="aurora"></div>
+<div class="moon"></div>
+<div class="fog fog-1"></div>
+<div class="fog fog-2"></div>
+<div class="frost"></div>
+<div class="flash" id="flash"></div>
 <div class="corner c-tl"></div>
 <div class="corner c-tr"></div>
-<div class="corner c-bl"></div>
-<div class="corner c-br"></div>
 
 <span class="walker" id="walker" title="pet the cat">ᓚᘏᗢ</span>
 
@@ -1243,6 +1525,7 @@
   <div class="help-row"><span class="help-k">titlebar dots</span><span class="help-d">change theme</span></div>
   <div class="help-row"><span class="help-k">♫ note</span><span class="help-d">tint the snow</span></div>
   <div class="help-row"><span class="help-k">prompt</span><span class="help-d">copy discord</span></div>
+  <div class="help-row"><span class="help-k">avatar</span><span class="help-d">discord profile</span></div>
   <div class="help-row"><span class="help-k">progress bar</span><span class="help-d">seek song</span></div>
   <div class="help-row"><span class="help-k">the cat</span><span class="help-d">pet it when it wanders by</span></div>
   <div class="help-row"><span class="help-k">wandering cat</span><span class="help-d">pet it</span></div>
@@ -1259,16 +1542,22 @@
 <aside class="explorer" id="explorer">
   <button class="explorer-tab" id="explorer-tab" aria-label="toggle files">files</button>
   <div class="explorer-titlebar">
-    <span class="tb-dot d1"></span>
+    <span class="tb-dot d1" id="ex-close" title="close"></span>
     <span class="explorer-title">files — ~/tabby</span>
   </div>
   <div class="explorer-body">
     <div class="vfs" id="vfs"></div>
   </div>
+  <div class="explorer-status">
+    <span id="vfs-count">--</span>
+    <span>~/tabby</span>
+  </div>
 </aside>
 
 <div class="card-wrap">
 <div class="card" id="card">
+
+  <div class="sheen"></div>
 
   <div class="titlebar reveal">
     <div class="tb-dots">
@@ -1293,7 +1582,10 @@
   </div>
 
   <div class="activity reveal" id="activity">
-    <div class="activity-text" id="activity-text"></div>
+    <div class="activity-row">
+      <img class="activity-art" id="activity-art" alt="" />
+      <div class="activity-text" id="activity-text"></div>
+    </div>
     <div class="spotify-bar" id="spotify-bar"><div class="spotify-bar-fill" id="spotify-bar-fill"></div></div>
   </div>
 
@@ -1314,8 +1606,9 @@
       <span class="vol-pct" id="vol-pct">1%</span>
       <button class="music-btn" id="mute-btn" title="mute / unmute" aria-label="mute or unmute">♪</button>
     </div>
-    <div class="yt-progress" id="yt-progress" title="seek">
+    <div class="yt-progress" id="yt-progress">
       <div class="yt-progress-fill" id="yt-progress-fill"></div>
+      <span class="seek-tip" id="seek-tip">0:00</span>
     </div>
     <div class="yt-time">
       <span id="yt-cur">0:00</span>
@@ -1382,6 +1675,7 @@
       <span>up <span class="s-v" id="sys-up">--</span></span>
       <span>visits <span class="s-v" id="sys-visits">--</span></span>
       <span id="sys-batt-wrap" style="display:none">batt <span class="s-v" id="sys-batt">--</span></span>
+      <span id="sys-mem-wrap" style="display:none">mem <span class="s-v" id="sys-mem">--</span></span>
     </div>
     <div class="yearbar">
       <span id="year-label">2026</span>
@@ -1409,7 +1703,9 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // ── accent themes (click the titlebar dots) ──
+  // tabby.beauty — one file, no build, no frameworks. deal with it
+
+  // accent themes
   const ACCENTS = [
     ['purple', '#8878d4', '136,120,212'],
     ['pink',   '#d4a5b8', '212,165,184'],
@@ -1422,10 +1718,13 @@
     const [, hex, rgb] = ACCENTS[accentIdx];
     document.documentElement.style.setProperty('--accent', hex);
     document.documentElement.style.setProperty('--accent-rgb', rgb);
+    const fav = document.querySelector('link[rel="icon"]');
+    if (fav) fav.href = 'data:image/svg+xml,' + encodeURIComponent(
+      "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='#0f0f11'/><text x='16' y='22' font-size='13' text-anchor='middle' fill='" + hex + "' font-family='monospace'>:3</text></svg>");
   }
   applyAccent();
 
-  document.querySelectorAll('.tb-dot').forEach(dot => {
+  document.querySelectorAll('.card .tb-dot').forEach(dot => {
     dot.addEventListener('click', () => {
       accentIdx = (accentIdx + 1) % ACCENTS.length;
       localStorage.setItem('accent', accentIdx);
@@ -1434,7 +1733,7 @@
     });
   });
 
-  // ── toast ──
+  // toast
   const toastEl = document.getElementById('toast');
   let toastTimer;
   function showToast(html) {
@@ -1444,7 +1743,7 @@
     toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
   }
 
-  // ── click username to copy discord ──
+  // copy discord
   let discordUsername = null;
   document.getElementById('username-copy').addEventListener('click', () => {
     const name = discordUsername || 'tabby';
@@ -1453,7 +1752,7 @@
     }).catch(() => {});
   });
 
-  // ── tab title when you wander off ──
+  // tab title
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       document.title = 'come back :3';
@@ -1464,21 +1763,27 @@
     }
   });
 
-  // ── Lanyard ──
+  // lanyard
   const DISCORD_ID = '1483326986570039518';
   const avatarEl      = document.getElementById('avatar');
   const activityEl    = document.getElementById('activity');
   const activityText  = document.getElementById('activity-text');
+  const activityArt   = document.getElementById('activity-art');
+  const avatarWrap    = document.querySelector('.avatar-wrap');
+  avatarWrap.style.cursor = 'pointer';
+  avatarWrap.title = 'open discord profile';
+  avatarWrap.addEventListener('click', () =>
+    window.open('https://discord.com/users/' + DISCORD_ID, '_blank'));
   const spotifyBar    = document.getElementById('spotify-bar');
   const spotifyFill   = document.getElementById('spotify-bar-fill');
   const presenceLine  = document.getElementById('presence-line');
 
-  let spotifyTs = null;    // { start, end } for local progress interpolation
-  let gameStart = null;    // timestamp for elapsed game time
+  let spotifyTs = null;
+  let gameStart = null;
   let gameName  = null;
-  let gameDetails = null;  // rich presence detail line
+  let gameDetails = null;
   let lastStatus  = 'offline';
-  let lastPing    = null;  // measured lanyard round-trip
+  let lastPing    = null;
 
   const STATUS_WORDS = { online: 'online', idle: 'away', dnd: 'do not disturb', offline: 'offline' };
 
@@ -1502,21 +1807,20 @@
       const { data: d } = await r.json();
       lastPing = Math.round(performance.now() - t0);
 
-      // status dot + presence line
       const st = d.discord_status ?? 'offline';
       lastStatus = STATUS_WORDS[st] ?? st;
       document.getElementById('status-dot').className = 'status-dot ' + st;
+      avatarWrap.dataset.st = st;
       const plat = d.active_on_discord_desktop ? 'desktop'
                  : d.active_on_discord_mobile  ? 'phone'
                  : d.active_on_discord_web     ? 'web' : null;
       presenceLine.innerHTML = '// <span class="p-status">' + esc(lastStatus) + '</span>'
                              + (plat ? ' <span class="p-plat">· on ' + plat + '</span>' : '');
 
-      // avatar — pulled live from discord cdn, base64 stays as fallback
+      // avatar (base64 is the fallback)
       const u = d.discord_user;
       if (u && u.username) {
         discordUsername = u.username;
-        // keep the prompt + titlebar synced to the discord username
         const nameEl = document.getElementById('u-name');
         if (nameEl.textContent !== u.username) {
           nameEl.textContent = u.username;
@@ -1529,7 +1833,7 @@
         if (avatarEl.src !== url) avatarEl.src = url;
       }
 
-      // activity — spotify > game > custom status
+      // spotify > game > status
       const acts   = d.activities || [];
       const game   = acts.find(a => a.type === 0);
       const custom = acts.find(a => a.type === 4);
@@ -1538,11 +1842,16 @@
       gameStart = null;
       gameName  = null;
       gameDetails = null;
+      activityArt.style.display = 'none';
       let html  = '';
 
       if (d.listening_to_spotify && d.spotify) {
         html = `<span class="a-label">listening</span> ${esc(d.spotify.song)} — ${esc(d.spotify.artist)}`;
         if (d.spotify.timestamps) spotifyTs = d.spotify.timestamps;
+        if (d.spotify.album_art_url) {
+          if (activityArt.src !== d.spotify.album_art_url) activityArt.src = d.spotify.album_art_url;
+          activityArt.style.display = 'block';
+        }
       } else if (game) {
         gameName = game.name;
         gameDetails = game.details || null;
@@ -1567,7 +1876,7 @@
   sync();
   setInterval(sync, 30000);
 
-  // tick spotify progress + game elapsed locally every second
+  // 1s ticker
   setInterval(() => {
     if (spotifyTs) {
       const { start, end } = spotifyTs;
@@ -1592,7 +1901,7 @@
     }
   }, 1000);
 
-  // ── Typewriter about ──
+  // typewriter about
   const ABOUT = "hi! im very mediocre at coding and focus on priority languages such as lua, c++, C, and python. my hobbies are very random so i might like a hobby that you do! -.-";
   const typedEl = document.getElementById('about-typed');
   let twStarted = false;
@@ -1612,7 +1921,7 @@
     })();
   }
 
-  // ── Card tilt + glow spot ──
+  // card tilt + glow spot
   const card = document.getElementById('card');
   const MAX_TILT = 3.5;
 
@@ -1635,19 +1944,20 @@
     card.style.transform = 'rotateY(0deg) rotateX(0deg)';
   });
 
-  // ── Clock (toronto time) ──
+  // clock (toronto time)
   const clockEl = document.getElementById('footer-clock');
   function tickClock() {
     const now = new Date().toLocaleTimeString('en-GB', {
       timeZone: 'America/Toronto', hour12: false,
       hour: '2-digit', minute: '2-digit', second: '2-digit'
     });
-    clockEl.textContent = now + ' est';
+    const you = new Date().toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit' });
+    clockEl.textContent = 'you ' + you + ' · ' + now + ' est';
   }
   tickClock();
   setInterval(tickClock, 1000);
 
-  // ── Load YouTube IFrame API ──
+  // load youtube iframe api
   (function() {
     var tag = document.createElement('script');
     tag.src = 'https://www.youtube.com/iframe_api';
@@ -1655,11 +1965,10 @@
     first.parentNode.insertBefore(tag, first);
   })();
 
-  // ── YouTube player ──
-  // paste your playlist id here (the part after list= in the playlist url)
-  // playlist must be public or UNLISTED — private playlists won't load in embeds
+  // youtube player
+  // playlist id, must be public or unlisted
   const PLAYLIST_ID = 'PLUN0YnJe72yo';
-  const SHUFFLE = false; // true = random order on load
+  const SHUFFLE = false; // shuffle on load
 
   var ytPlayer;
   var ytReady = false;
@@ -1673,14 +1982,12 @@
   function updateTrackTitle() {
     if (!ytPlayer) return;
     const data = ytPlayer.getVideoData();
-    // album art from the video thumbnail
     if (data && data.video_id) {
       const thumb = document.getElementById('music-thumb');
       const src = 'https://i.ytimg.com/vi/' + data.video_id + '/default.jpg';
       if (thumb.src !== src) thumb.src = src;
       thumb.style.display = 'block';
     }
-    // track position in the playlist
     try {
       const pl = ytPlayer.getPlaylist();
       if (pl && pl.length) {
@@ -1690,7 +1997,6 @@
     if (data && data.title) {
       document.getElementById('music-title').textContent = data.title;
       if (data.title !== lastTitle) {
-        // announce track changes (but not the very first load)
         if (lastTitle !== null && hasEntered) {
           showToast('<span class="t-accent">♫</span> now playing · <span class="t-accent">' + esc(data.title) + '</span>');
         }
@@ -1723,7 +2029,6 @@
         },
         onStateChange: function(e) {
           setTimeout(updateTrackTitle, 500);
-          // pause / resume the bobbing note
           const note = document.getElementById('music-note');
           const eq   = document.getElementById('eq');
           if (e.data === YT.PlayerState.PLAYING) { note.classList.remove('paused'); eq.classList.remove('paused'); }
@@ -1733,7 +2038,19 @@
     });
   }
 
-  // ── click the bar to seek ──
+  // seek tooltip
+  document.getElementById('yt-progress').addEventListener('mousemove', function(e) {
+    if (!ytPlayer || !ytReady) return;
+    const dur = ytPlayer.getDuration();
+    if (!dur) return;
+    const rect = this.getBoundingClientRect();
+    const pct = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+    const tip = document.getElementById('seek-tip');
+    tip.style.left = (pct * rect.width) + 'px';
+    tip.textContent = fmtTime(dur * pct);
+  });
+
+  // seek
   document.getElementById('yt-progress').addEventListener('click', function(e) {
     if (!ytPlayer || !ytReady) return;
     const dur = ytPlayer.getDuration();
@@ -1743,12 +2060,12 @@
     ytPlayer.seekTo(dur * pct, true);
   });
 
-  // ── keyboard shortcuts (desktop): space play/pause · b/n prev/next · m mute ──
+  // media keys
   document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     if (!hasEntered) return;
     const k = e.key.toLowerCase();
-    // halfway into the konami sequence? give the keys to the code, not the player
+    // mid-konami, dont eat the keys
     if (konamiIdx >= 4 && k === KONAMI[konamiIdx]) return;
     if (k === ' ')      { e.preventDefault(); document.getElementById('play-btn').click(); }
     else if (k === 'n') { document.getElementById('next-btn').click(); }
@@ -1765,7 +2082,7 @@
     }
   });
 
-  // ── click the ♫ to tint the snow with your accent ──
+  // snow tint
   let snowAccent = false;
   document.getElementById('music-note').addEventListener('click', () => {
     snowAccent = !snowAccent;
@@ -1774,7 +2091,7 @@
       : 'snow → white');
   });
 
-  // ── prev / next ──
+  // prev / next
   document.getElementById('prev-btn').addEventListener('click', function() {
     if (!ytPlayer || !ytReady) return;
     ytPlayer.previousVideo();
@@ -1787,7 +2104,7 @@
     document.getElementById('play-btn').textContent = '⏸︎';
   });
 
-  // ── Enter overlay + boot sequence ──
+  // enter overlay + boot sequence
   const overlay = document.getElementById('enter-overlay');
   const BOOT_LINES = [
     '<span class="b-dim">tabby.beauty</span> <span class="b-dim">v2</span>',
@@ -1811,13 +2128,13 @@
     card.classList.add('entered');
     hasEntered = true;
     typewriter();
-    // hint at the terminal (desktop only — phones have the >_ button)
+    // term hint
     setTimeout(() => {
       if (window.innerWidth > 560) {
         showToast('psst — <span class="t-accent">`</span> opens a terminal');
       }
     }, 2600);
-    // start music now that we have user interaction
+    // start music
     if (ytReady) {
       ytPlayer.playVideo();
       document.getElementById('play-btn').textContent = '⏸︎';
@@ -1834,13 +2151,12 @@
 
   overlay.addEventListener('click', function() {
     if (bootDone) return;
-    if (booting) { booting = false; finishBoot(); return; }  // click again = skip
+    if (booting) { booting = false; finishBoot(); return; } // skip
     booting = true;
-    // greet by visitor's local time of day
     const hr = new Date().getHours();
     const greet = hr < 5 ? 'good night' : hr < 12 ? 'good morning' : hr < 18 ? 'good afternoon' : 'good evening';
     BOOT_LINES[BOOT_LINES.length - 1] = '<span class="b-acc">' + greet + ' :3</span>';
-    overlay.innerHTML = '<div class="boot-log" id="boot-log"></div>';
+    document.getElementById('greeter-body').innerHTML = '<div class="boot-log" id="boot-log"></div>';
     const log = document.getElementById('boot-log');
     let i = 0;
     (function next() {
@@ -1858,7 +2174,7 @@
     })();
   });
 
-  // ── Player controls ──
+  // player controls
   document.getElementById('play-btn').addEventListener('click', function() {
     if (!ytPlayer || !ytReady) return;
     if (ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
@@ -1891,7 +2207,7 @@
     else         { ytPlayer.unMute(); btn.textContent = '♪'; }
   });
 
-  // ── help panel ──
+  // help panel
   const helpBtn   = document.getElementById('help-btn');
   const helpPanel = document.getElementById('help-panel');
 
@@ -1909,15 +2225,22 @@
     }
   });
 
-  // ── footer kaomoji of the visit ──
+  // greeter greeting
+  (function greeterInit() {
+    const hr = new Date().getHours();
+    document.getElementById('greeter-greet').textContent =
+      hr < 5 ? 'good night' : hr < 12 ? 'good morning' : hr < 18 ? 'good afternoon' : 'good evening';
+  })();
+
+  // kaomoji
   const KAO = [':3', '^-^', '>_<', '-.-', '( ˘ω˘ )', '(¬‿¬)', 'ᓚᘏᗢ'];
   document.getElementById('kao').textContent = KAO[Math.floor(Math.random() * KAO.length)];
 
-  // ── your personal visit counter (this device only) ──
+  // visit counter (local)
   const siteVisits = (parseInt(localStorage.getItem('visits') || '0') || 0) + 1;
   localStorage.setItem('visits', siteVisits);
 
-  // ── secret #4: each flower launches a different direction ──
+  // flower launchers
   document.querySelectorAll('.plants .p-a').forEach((f, i) => {
     f.style.pointerEvents = 'auto';
     const dir = ['r', 'l', 'u'][i % 3];
@@ -1934,27 +2257,36 @@
       z.classList.add('go-' + dir);
       setTimeout(() => {
         z.classList.remove('go-' + dir);
-        z.style.left = '';   // clear inline overrides so she
-        z.style.top = '';    // parks back off-screen properly
+        z.style.left = '';
+        z.style.top = '';
       }, 850);
     });
   });
 
-  // ── the wandering cat ──
+  // the wandering cat
   const walker = document.getElementById('walker');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let catWalking = false;
 
   function catWalk() {
     if (catWalking || reducedMotion) return;
-    if (document.hidden) { scheduleCat(); return; }   // don't waste walks on hidden tabs
+    if (document.hidden) { scheduleCat(); return; }
     catWalking = true;
-    const ltr = Math.random() < 0.5;                  // random direction
+    const ltr = Math.random() < 0.5;
     const dur = 14000 + Math.random() * 8000;
     const a = -80, b = window.innerWidth + 80;
     const from = ltr ? a : b, to = ltr ? b : a;
-    const t0 = performance.now();
+    let t0 = performance.now();
+    let pauseUntil = 0;
     (function step(t) {
+      if (t < pauseUntil) { requestAnimationFrame(step); return; }
+      if (Math.random() < 0.003) {
+        const wait = 600 + Math.random() * 900;
+        pauseUntil = t + wait;
+        t0 += wait;
+        requestAnimationFrame(step);
+        return;
+      }
       const p = (t - t0) / dur;
       if (p >= 1) {
         walker.style.transform = 'translateX(-200px)';
@@ -1971,7 +2303,7 @@
     if (reducedMotion) return;
     setTimeout(catWalk, 50000 + Math.random() * 110000);
   }
-  setTimeout(catWalk, 18000 + Math.random() * 20000);  // first visit ~18-38s in
+  setTimeout(catWalk, 18000 + Math.random() * 20000);
 
   walker.addEventListener('click', () => {
     const pets = (parseInt(localStorage.getItem('pets') || '0') || 0) + 1;
@@ -1980,7 +2312,7 @@
     showToast('<span class="t-accent">' + MEOWS[Math.floor(Math.random() * MEOWS.length)] + '</span>');
   });
 
-  // ── virtual filesystem ──
+  // virtual filesystem
   const VFS = {
     'about': {
       'me.txt': 'hi im tabby!\nim a very parasocial person that doesnt talk alot\nunless if im good mutuals with you.\nshare hobbies with me since i like alot of stuff\nand we might match topics ^-^ ~',
@@ -2006,56 +2338,109 @@
     return cwd.reduce((n, k) => (n && typeof n === 'object') ? n[k] : null, VFS);
   }
 
-  // ── explorer widget ──
+  // explorer tree
   (function renderVFS() {
     const root = document.getElementById('vfs');
-    function build(node, container, depth, openByDefault) {
+    let nd = 0, nf = 0;
+
+    const rootRow = document.createElement('div');
+    rootRow.className = 'vfs-row v-dir';
+    rootRow.innerHTML = '<span class="v-icon">▾</span><span class="v-name">~/tabby</span>';
+    root.appendChild(rootRow);
+    const rootKids = document.createElement('div');
+    rootKids.className = 'vfs-children open';
+    root.appendChild(rootKids);
+    rootRow.addEventListener('click', () => {
+      const on = rootKids.classList.toggle('open');
+      rootRow.querySelector('.v-icon').textContent = on ? '▾' : '▸';
+    });
+
+    function build(node, container, anc) {
       const keys = Object.keys(node).filter(k => !k.startsWith('.'));
       keys.sort((a, b) => {
         const da = typeof node[a] === 'object', db = typeof node[b] === 'object';
         return da === db ? a.localeCompare(b) : (da ? -1 : 1);
       });
-      for (const k of keys) {
+      keys.forEach((k, idx) => {
+        const last = idx === keys.length - 1;
+        const pre = anc.map(a => a ? '│  ' : '   ').join('') + (last ? '└─ ' : '├─ ');
         const isDir = typeof node[k] === 'object';
         const row = document.createElement('div');
         row.className = 'vfs-row' + (isDir ? ' v-dir' : '');
-        row.style.paddingLeft = (depth * 15) + 'px';
-        row.innerHTML = '<span class="v-icon">' + (isDir ? '▸' : '·') + '</span><span class="v-name">' + esc(k) + (isDir ? '/' : '') + '</span>';
+        row.innerHTML = '<span class="v-pre">' + pre + '</span>'
+          + (isDir ? '<span class="v-icon">▸</span>' : '')
+          + '<span class="v-name">' + esc(k) + (isDir ? '/' : '') + '</span>';
         container.appendChild(row);
         if (isDir) {
+          nd++;
           const kids = document.createElement('div');
           kids.className = 'vfs-children';
           container.appendChild(kids);
-          build(node[k], kids, depth + 1, false);
-          const open = openByDefault && k === 'about';
-          if (open) { kids.classList.add('open'); row.querySelector('.v-icon').textContent = '▾'; }
+          build(node[k], kids, anc.concat(!last));
+          if (k === 'about') { kids.classList.add('open'); row.querySelector('.v-icon').textContent = '▾'; }
           row.addEventListener('click', () => {
             const on = kids.classList.toggle('open');
             row.querySelector('.v-icon').textContent = on ? '▾' : '▸';
           });
         } else {
+          nf++;
           const view = document.createElement('div');
           view.className = 'vfs-file-view';
-          view.style.marginLeft = (depth * 15 + 18) + 'px';
-          view.textContent = node[k];
+          view.style.marginLeft = pre.length + 'ch';
+          view.innerHTML = '<span class="vf-name">' + esc(k) + '</span>';
+          view.appendChild(document.createTextNode(node[k]));
           container.appendChild(view);
-          row.addEventListener('click', () => view.classList.toggle('open'));
+          row.addEventListener('click', () => {
+            view.classList.toggle('open');
+            row.classList.toggle('active');
+          });
         }
-      }
+      });
     }
-    build(VFS, root, 0, true);
+    build(VFS, rootKids, []);
+    document.getElementById('vfs-count').textContent = nd + ' dirs · ' + nf + ' files';
   })();
 
-  // ── explorer drawer toggle ──
+  // draggable explorer window
+  (function dragExplorer() {
+    const ex = document.getElementById('explorer');
+    const bar = ex.querySelector('.explorer-titlebar');
+    let dx = 0, dy = 0, dragging = false;
+    bar.addEventListener('pointerdown', e => {
+      if (e.target.id === 'ex-close') return;
+      dragging = true;
+      const r = ex.getBoundingClientRect();
+      dx = e.clientX - r.left; dy = e.clientY - r.top;
+      ex.style.left = r.left + 'px';
+      ex.style.top = r.top + 'px';
+      ex.style.transform = 'none';
+      ex.classList.add('dragging');
+      bar.setPointerCapture(e.pointerId);
+    });
+    bar.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      ex.style.left = (e.clientX - dx) + 'px';
+      ex.style.top = (e.clientY - dy) + 'px';
+    });
+    bar.addEventListener('pointerup', () => { dragging = false; ex.classList.remove('dragging'); });
+  })();
+
+  // drawer
   (function explorerDrawer() {
     const ex = document.getElementById('explorer');
-    ex.classList.add('closed');   // always starts tucked away
+    ex.classList.add('closed');
+    function shut() {
+      ex.classList.add('closed');
+      ex.style.left = ''; ex.style.top = ''; ex.style.transform = '';
+    }
     document.getElementById('explorer-tab').addEventListener('click', () => {
-      ex.classList.toggle('closed');
+      if (ex.classList.contains('closed')) ex.classList.remove('closed');
+      else shut();
     });
+    document.getElementById('ex-close').addEventListener('click', shut);
   })();
 
-  // ── mini terminal ──
+  // mini terminal
   const term      = document.getElementById('terminal');
   const termOut   = document.getElementById('term-out');
   const termInput = document.getElementById('term-input');
@@ -2093,7 +2478,7 @@
 
   const COMMANDS = {
     help() {
-      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
+      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
     },
     whoami() {
       const ua = navigator.userAgent;
@@ -2301,6 +2686,12 @@
         }
       }, 70);
     },
+    rain() {
+      bgMode = (bgMode === 'rain') ? 'snow' : 'rain';
+      termPrint(bgMode === 'rain'
+        ? '<span class="t-acc">it never rains in the terminal… until now</span>'
+        : '<span class="t-dim">back to snow</span>');
+    },
     matrix() {
       toggleMatrix();
       termPrint(bgMode === 'matrix'
@@ -2402,7 +2793,7 @@
     else if (e.key === 'Escape') { termToggle(false); helpPanel.classList.remove('open'); }
   });
 
-  // ── konami → snowstorm ──
+  // konami → snowstorm
   const KONAMI = ['arrowup','arrowup','arrowdown','arrowdown','arrowleft','arrowright','arrowleft','arrowright','b','a'];
   let konamiIdx = 0;
 
@@ -2427,7 +2818,7 @@
     }, 8000);
   }
 
-  // second secret: tap the footer kaomoji 7 times (phone-friendly)
+  // kaomoji secret
   let kaoTaps = 0, kaoTimer;
   document.getElementById('kao').addEventListener('click', () => {
     kaoTaps++;
@@ -2436,7 +2827,7 @@
     if (kaoTaps >= 7) { kaoTaps = 0; snowstorm(); }
   });
 
-  // ── Snow ──
+  // snow
   const canvas = document.getElementById('snow');
   const ctx = canvas.getContext('2d');
   let W, H, flakes;
@@ -2462,18 +2853,38 @@
 
   function init() { resize(); flakes = Array.from({ length: 120 }, makeFlake); initSky(); }
 
-  // ── matrix mode ──
+  // matrix mode
   let bgMode = 'snow';
   let drops = [];
   const MCHARS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿ0123456789:3<>/';
 
   function toggleMatrix() {
-    bgMode = (bgMode === 'snow') ? 'matrix' : 'snow';
+    bgMode = (bgMode === 'matrix') ? 'snow' : 'matrix';
     drops = [];
   }
 
-  // ── night sky: stars, fireflies, meteors ──
-  let stars = [], flies = [], meteors = [];
+  let rains = [];
+  function drawRain() {
+    if (rains.length !== 130) {
+      rains = Array.from({ length: 130 }, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        l: 6 + Math.random() * 10, s: 7 + Math.random() * 7
+      }));
+    }
+    ctx.strokeStyle = 'rgba(168,176,204,0.32)';
+    ctx.lineWidth = 1;
+    for (const r of rains) {
+      ctx.beginPath();
+      ctx.moveTo(r.x, r.y);
+      ctx.lineTo(r.x - 1.2, r.y + r.l);
+      ctx.stroke();
+      r.y += r.s; r.x -= 0.4;
+      if (r.y > H) { r.y = -14; r.x = Math.random() * (W + 20); }
+    }
+  }
+
+  // sky
+  let stars = [], flies = [], meteors = [], consts = [], sat = null;
   let nextMeteor = performance.now() + 5000 + Math.random() * 8000;
 
   function initSky() {
@@ -2490,14 +2901,42 @@
       sp: 0.15 + Math.random() * 0.2,
       tw: Math.random() * Math.PI * 2
     }));
+    consts = Array.from({ length: 3 }, () => {
+      const cx = W * (0.1 + Math.random() * 0.8);
+      const cy = H * (0.08 + Math.random() * 0.5);
+      const n = 4 + Math.floor(Math.random() * 3);
+      return Array.from({ length: n }, () => ({
+        x: cx + (Math.random() - 0.5) * 130,
+        y: cy + (Math.random() - 0.5) * 110
+      }));
+    });
+    sat = { x: -30, y: H * (0.08 + Math.random() * 0.3), sp: 0.35 + Math.random() * 0.25, t: 0 };
   }
 
   function drawSky() {
-    // parallax from cursor
+    // parallax
     const px = snowMouse.x >= 0 ? (snowMouse.x - W / 2) : 0;
     const py = snowMouse.y >= 0 ? (snowMouse.y - H / 2) : 0;
 
-    // twinkling stars
+    // constellations
+    ctx.strokeStyle = 'rgba(255,255,255,0.045)';
+    ctx.lineWidth = 1;
+    for (const c of consts) {
+      ctx.beginPath();
+      for (let i = 0; i < c.length; i++) {
+        const x = c[i].x - px * 0.006, y = c[i].y - py * 0.006;
+        i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+      }
+      ctx.stroke();
+      for (const p of c) {
+        ctx.beginPath();
+        ctx.arc(p.x - px * 0.006, p.y - py * 0.006, 1.3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fill();
+      }
+    }
+
+    // stars
     for (const s of stars) {
       s.tw += s.sp;
       const o = 0.22 + 0.33 * (0.5 + 0.5 * Math.sin(s.tw));
@@ -2507,7 +2946,7 @@
       ctx.fill();
     }
 
-    // accent fireflies, wandering
+    // fireflies
     for (const f of flies) {
       f.a += (Math.random() - 0.5) * 0.3;
       f.x += Math.cos(f.a) * f.sp;
@@ -2546,6 +2985,29 @@
       ctx.stroke();
       if (m.life <= 0 || m.y > H + 30) meteors.splice(i, 1);
     }
+
+    // satellite
+    if (sat) {
+      sat.x += sat.sp;
+      sat.y += sat.sp * 0.06;
+      sat.t++;
+      if (sat.x > W + 30) {
+        sat.x = -30;
+        sat.y = H * (0.08 + Math.random() * 0.3);
+        sat.sp = 0.35 + Math.random() * 0.25;
+      }
+      const pulse = 0.35 + 0.35 * (0.5 + 0.5 * Math.sin(sat.t * 0.06));
+      ctx.beginPath();
+      ctx.arc(sat.x, sat.y, 1.4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,' + pulse + ')';
+      ctx.fill();
+      if (sat.t % 90 < 5) {
+        ctx.beginPath();
+        ctx.arc(sat.x + 3, sat.y - 2, 1, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',0.8)';
+        ctx.fill();
+      }
+    }
   }
 
   function drawMatrix() {
@@ -2570,6 +3032,11 @@
     }
     ctx.clearRect(0, 0, W, H);
     drawSky();
+    if (bgMode === 'rain') {
+      drawRain();
+      requestAnimationFrame(draw);
+      return;
+    }
     for (const f of flakes) {
       ctx.beginPath();
       ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
@@ -2578,7 +3045,6 @@
         : `rgba(255,255,255,${f.opacity})`;
       ctx.fill();
       f.y += f.speed; f.x += f.drift;
-      // gently dodge the cursor
       const ddx = f.x - snowMouse.x, ddy = f.y - snowMouse.y;
       const dist = Math.hypot(ddx, ddy);
       if (dist < 90 && dist > 0.1) {
@@ -2594,7 +3060,7 @@
   window.addEventListener('resize', resize);
   init(); draw();
 
-  // ── cursor trail ──
+  // cursor trail
   let trailTick = 0;
   document.addEventListener('mousemove', (e) => {
     if (!trailOn) return;
@@ -2607,7 +3073,7 @@
     setTimeout(() => d.remove(), 600);
   });
 
-  // ── idle screensaver ──
+  // idle screensaver
   const saver = document.getElementById('saver');
   const saverLogo = document.getElementById('saver-logo');
   let saverActive = false, idleTimer = null;
@@ -2648,11 +3114,11 @@
   );
   idlePoke();
 
-  // ── live sys widget ──
+  // live sys widget
   let fpsFrames = 0, fpsValue = 0;
   (function fpsCount() { fpsFrames++; requestAnimationFrame(fpsCount); })();
 
-  // battery chip, where the browser allows it (chrome/android — not ios)
+  // battery (no ios)
   if (navigator.getBattery) {
     navigator.getBattery().then(b => {
       const wrap = document.getElementById('sys-batt-wrap');
@@ -2674,6 +3140,12 @@
     document.getElementById('sys-up').textContent = fmtElapsed(Date.now() - pageStart);
     document.getElementById('sys-visits').textContent = siteVisits;
 
+    if (performance.memory) {
+      document.getElementById('sys-mem-wrap').style.display = '';
+      document.getElementById('sys-mem').textContent =
+        Math.round(performance.memory.usedJSHeapSize / 1048576) + 'mb';
+    }
+
     // year progress
     const now = new Date();
     const y0 = new Date(now.getFullYear(), 0, 1);
@@ -2686,7 +3158,7 @@
   updateSys();
   setInterval(updateSys, 1000);
 
-  // ── github widget ──
+  // github widget
   (async function ghWidget() {
     try {
       const r = await fetch('https://api.github.com/users/glaceyawn');
@@ -2699,7 +3171,7 @@
     } catch (_) {}
   })();
 
-  // ── click ripple ──
+  // click ripple
   document.addEventListener('click', (e) => {
     const d = document.createElement('span');
     d.className = 'ripple';
@@ -2708,6 +3180,16 @@
     document.body.appendChild(d);
     setTimeout(() => d.remove(), 550);
   });
+
+  // lightning, rain mode only
+  const flashEl = document.getElementById('flash');
+  setInterval(() => {
+    if (bgMode !== 'rain' || Math.random() > 0.28) return;
+    flashEl.style.opacity = 0.07;
+    setTimeout(() => flashEl.style.opacity = 0, 70);
+    setTimeout(() => flashEl.style.opacity = 0.045, 150);
+    setTimeout(() => flashEl.style.opacity = 0, 230);
+  }, 4000);
 </script>
 
 </body>
