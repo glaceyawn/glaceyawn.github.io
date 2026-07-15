@@ -2634,7 +2634,7 @@
 
   const COMMANDS = {
     help() {
-      termPrint('<span class="t-dim">commands:</span> hello · whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · light · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
+      termPrint('<span class="t-dim">commands:</span> hello · whoami · neofetch · weather &lt;city&gt; · cat · fortune · flip · train · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · light · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
     },
     whoami() {
       const ua = navigator.userAgent;
@@ -2723,18 +2723,6 @@
       if (!termHistory.length) { termPrint('<span class="t-dim">no history</span>'); return; }
       termHistory.forEach((c, i) => termPrint('<span class="t-dim">' + (i + 1) + '</span>&nbsp;&nbsp;' + esc(c)));
     },
-    cowsay(_, rest) {
-      const msg = (rest || 'meow').slice(0, 40);
-      const bar = '─'.repeat(msg.length + 2);
-      termPrint('<pre class="t-fetch">' +
-        ' ╭' + bar + '╮\n' +
-        ' │ ' + esc(msg) + ' │\n' +
-        ' ╰' + bar + '╯\n' +
-        '    \\   /\\_/\\\n' +
-        '     \\ ( o.o )\n' +
-        '        &gt; ^ &lt;' +
-        '</pre>');
-    },
     cls() { termOut.innerHTML = ''; },
     async weather(_, rest) {
       const q = (rest || '').trim();
@@ -2785,49 +2773,8 @@
       ];
       termPrint('<span class="t-acc">☆</span> ' + F[Math.floor(Math.random() * F.length)]);
     },
-    ['8ball'](_, rest) {
-      if (!rest) { termPrint('<span class="t-dim">usage: 8ball &lt;question&gt;</span>'); return; }
-      const A = ['yes :3', 'no.', 'absolutely', 'ask the cat', 'unclear, shake again', 'without a doubt',
-                 'mrrp (that means yes)', 'the snow says no', 'certainly not', 'probably!', 'don\'t count on it'];
-      termPrint('<span class="t-acc">(8)</span> ' + A[Math.floor(Math.random() * A.length)]);
-    },
-    roll(arg) {
-      const n = parseInt(arg) || 6;
-      if (n < 2 || n > 1000000) { termPrint('<span class="t-dim">usage: roll 2-1000000</span>'); return; }
-      termPrint('d' + n + ' <span class="t-acc">→ ' + (1 + Math.floor(Math.random() * n)) + '</span>');
-    },
     flip() {
       termPrint('<span class="t-acc">' + (Math.random() < 0.5 ? 'heads' : 'tails') + '</span>');
-    },
-    calc(_, rest) {
-      if (!rest || !/^[0-9+\-*/(). %]+$/.test(rest)) { termPrint('<span class="t-dim">usage: calc 2+2*10</span>'); return; }
-      try {
-        const r = Function('"use strict"; return (' + rest + ')')();
-        termPrint(esc(rest) + ' <span class="t-acc">= ' + r + '</span>');
-      } catch (_) { termPrint('<span class="t-err">math broke</span>'); }
-    },
-    ping(_, rest) {
-      const host = (rest || 'tabby.beauty').split(' ')[0].slice(0, 40);
-      let i = 0;
-      const iv = setInterval(() => {
-        i++;
-        termPrint('reply from <span class="t-acc">' + esc(host) + '</span>: time=' + (8 + Math.random() * 40).toFixed(1) + 'ms');
-        if (i >= 4) { clearInterval(iv); termPrint('<span class="t-dim">4 packets, 0% loss (trust me)</span>'); }
-      }, 350);
-    },
-    hack() {
-      const L = ['initializing exploit…', 'bypassing firewall…', 'decrypting mainframe…',
-                 'spoofing identity…', 'injecting payload…', 'stealing snacks from the kitchen…'];
-      let i = 0;
-      const iv = setInterval(() => {
-        if (i < L.length) { termPrint('<span class="t-dim">' + L[i++] + '</span>'); }
-        else {
-          clearInterval(iv);
-          card.classList.add('glitch');
-          setTimeout(() => card.classList.remove('glitch'), 600);
-          termPrint('<span class="t-acc">ACCESS GRANTED</span> <span class="t-dim">:3 (nothing was hacked)</span>');
-        }
-      }, 320);
     },
     train() {
       const d = document.createElement('div');
@@ -2847,12 +2794,6 @@
       bgMode = (bgMode === 'rain') ? 'snow' : 'rain';
       termPrint(bgMode === 'rain'
         ? '<span class="t-acc">it never rains in the terminal… until now</span>'
-        : '<span class="t-dim">back to snow</span>');
-    },
-    matrix() {
-      toggleMatrix();
-      termPrint(bgMode === 'matrix'
-        ? '<span class="t-acc">wake up, tabby…</span> <span class="t-dim">(matrix again to stop)</span>'
         : '<span class="t-dim">back to snow</span>');
     },
     party() {
@@ -3016,15 +2957,7 @@
 
   function init() { resize(); flakes = Array.from({ length: W < 600 ? 60 : 120 }, makeFlake); initSky(); }
 
-  // matrix mode
   let bgMode = 'snow';
-  let drops = [];
-  const MCHARS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿ0123456789:3<>/';
-
-  function toggleMatrix() {
-    bgMode = (bgMode === 'matrix') ? 'snow' : 'matrix';
-    drops = [];
-  }
 
   let rains = [];
   function drawRain() {
@@ -3177,26 +3110,7 @@
     }
   }
 
-  function drawMatrix() {
-    const cols = Math.floor(W / 14) + 1;
-    if (drops.length !== cols) drops = Array.from({ length: cols }, () => Math.random() * H / 14);
-    ctx.fillStyle = lightMode ? 'rgba(238,240,246,0.16)' : 'rgba(15,15,17,0.14)';
-    ctx.fillRect(0, 0, W, H);
-    ctx.font = '12px monospace';
-    ctx.fillStyle = 'rgba(' + accentRGB + ',0.9)';
-    for (let i = 0; i < cols; i++) {
-      ctx.fillText(MCHARS[Math.floor(Math.random() * MCHARS.length)], i * 14, drops[i] * 14);
-      if (drops[i] * 14 > H && Math.random() > 0.975) drops[i] = 0;
-      drops[i] += 0.55;
-    }
-  }
-
   function draw() {
-    if (bgMode === 'matrix') {
-      drawMatrix();
-      requestAnimationFrame(draw);
-      return;
-    }
     ctx.clearRect(0, 0, W, H);
     drawSky();
     if (bgMode === 'rain') {
