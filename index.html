@@ -4,20 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>tabby</title>
-  <meta name="description" content="my thingy mabobt" />
+  <meta name="description" content="tabby's little corner of the internet" />
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#8878d4" />
   <meta property="og:site_name" content="tabby.beauty" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tabby.beauty/" />
   <meta property="og:title" content="tabby ᓚᘏᗢ" />
-  <meta property="og:description" content="hi it me" />
+  <meta property="og:description" content="hi its me it my bio" />
   <meta property="og:image" content="https://tabby.beauty/embed.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="tabby ᓚᘏᗢ" />
-  <meta name="twitter:description" content="hi its me this my bio" />
+  <meta name="twitter:description" content="hi its me it my bio" />
   <meta name="twitter:image" content="https://tabby.beauty/embed.png" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230f0f11'/><text x='16' y='22' font-size='13' text-anchor='middle' fill='%238878d4' font-family='monospace'>:3</text></svg>" />
   <link rel="preconnect" href="https://api.lanyard.rest" />
@@ -1147,7 +1147,6 @@
     body.light .profile,
     body.light .activity,
     body.light .terminal { background: rgba(0,0,0,0.035); }
-    body.light .moon,
     body.light .frost { display: none; }
     body.light::before {
       background: radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,0.12) 100%);
@@ -1159,29 +1158,6 @@
     body.light .greeter {
       box-shadow: 0 8px 28px rgba(40,40,60,0.16), 0 0 70px rgba(var(--accent-rgb), 0.07);
     }
-
-    /* moon */
-    .moon {
-      position: fixed;
-      top: 74px;
-      right: 9%;
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 38% 38%, #3b3b42, #26262b 68%);
-      box-shadow: 0 0 46px rgba(200, 206, 224, 0.09), inset -7px -7px 14px rgba(0,0,0,0.35);
-      opacity: 0.85;
-    }
-    .moon::before, .moon::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.16);
-    }
-    .moon::before { width: 9px; height: 9px; top: 14px; left: 13px; }
-    .moon::after  { width: 6px; height: 6px; top: 31px; left: 29px; }
 
     /* fog */
     .fog {
@@ -1546,8 +1522,6 @@
       .terminal { padding: 10px 16px 11px; }
       .footer   { padding: 8px 16px; }
 
-      /* calmer sky */
-      .moon { display: none; }
 
       .orb { display: none; }
       .aurora { display: none; }
@@ -1597,7 +1571,6 @@
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
 <div class="aurora"></div>
-<div class="moon"></div>
 <div class="fog fog-1"></div>
 <div class="fog fog-2"></div>
 <div class="frost"></div>
@@ -2280,6 +2253,7 @@
     '[ <span class="b-ok">ok</span> ] mounting /home/tabby',
     '[ <span class="b-ok">ok</span> ] starting wayland session',
     '[ <span class="b-ok">ok</span> ] connecting to lanyard',
+    '[ <span class="b-ok">ok</span> ] waking the cat for you',
     '[ <span class="b-ok">ok</span> ] loading playlist',
     '[ <span class="b-ok">ok</span> ] snow.service started',
     '<span class="b-acc">welcome :3</span>'
@@ -2397,8 +2371,10 @@
   // greeter greeting
   (function greeterInit() {
     const hr = new Date().getHours();
-    document.getElementById('greeter-greet').textContent =
-      hr < 5 ? 'good night' : hr < 12 ? 'good morning' : hr < 18 ? 'good afternoon' : 'good evening';
+    const back = (parseInt(localStorage.getItem('visits') || '0') || 0) > 0;
+    document.getElementById('greeter-greet').textContent = back
+      ? 'welcome back'
+      : (hr < 5 ? 'good night' : hr < 12 ? 'good morning' : hr < 18 ? 'good afternoon' : 'good evening');
   })();
 
   // kaomoji
@@ -2490,7 +2466,7 @@
     'about': {
       'me.txt': 'hi im tabby!\nim a very parasocial person that doesnt talk alot\nunless if im good mutuals with you.\nshare hobbies with me since i like alot of stuff\nand we might match topics ^-^ ~',
       'hobbies.txt': '· making rices and using linux\n· i edit alot of videos (mediocre but still)\n· good at rhythm games\n· kinda okay at shooters',
-      'contact.txt': 'github   → github.com/glaceyawn\nyoutube  → @bisexualratt\nsteam    → /id/mawsdeep\ndiscord  → the server link below\n\n(or just yell into the void, i check that too)'
+      'contact.txt': 'github   → github.com/glaceyawn\nyoutube  → @bisexualratt\nsteam    → /id/mawsdeep\ndiscord  → the server link below'
     },
     'games': {
       'csgo.txt': 'im obsessed with movement\nand the source engine in general.',
@@ -2502,7 +2478,7 @@
       'dotfiles.txt': 'void + nixos configs\nriver / hyprland · waybar · foot / kitty\nblack background or nothing'
     },
     '.hidden': {
-      'the-third-secret.txt': 'you found it :3\n\nsecret 1: a certain old cheat code\nsecret 2: the footer face, seven taps\nsecret 3: this file\nsecret 4: try pressing a flower sometime\n\ncollect all four and you win… my respect'
+      'the-third-secret.txt': 'you found it :3\n\nsecret 1: a certain old cheat code\nsecret 2: the footer face, seven taps\nsecret 3: this file\nsecret 4: try pressing a flower sometime'
     }
   };
   let cwd = [];
@@ -2641,7 +2617,7 @@
     term.classList.toggle('open', willOpen);
     if (willOpen) {
       if (!termWelcomed) {
-        termPrint('<span class="t-dim">welcome to tabby term — type</span> <span class="t-acc">help</span>');
+        termPrint('<span class="t-dim">this shell is all yours — try</span> <span class="t-acc">help</span>');
         termWelcomed = true;
       }
       termInput.focus();
@@ -2658,7 +2634,7 @@
 
   const COMMANDS = {
     help() {
-      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · light · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
+      termPrint('<span class="t-dim">commands:</span> hello · whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · light · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
     },
     whoami() {
       const ua = navigator.userAgent;
@@ -2898,8 +2874,14 @@
       termPrint(trailOn ? '<span class="t-acc">✦ cursor trail on</span>' : '<span class="t-dim">trail off</span>');
     },
     whois() {
-      termPrint('<span class="t-acc">tabby</span> <span class="t-dim">·</span> linux enjoyer <span class="t-dim">·</span> mediocre coder (self-proclaimed) <span class="t-dim">·</span> fragmovie editor <span class="t-dim">·</span> owner of this fine establishment');
+      termPrint('<span class="t-acc">tabby</span> <span class="t-dim">·</span> linux enjoyer <span class="t-dim">·</span> mediocre coder <span class="t-dim">·</span> fragmovie editor');
     },
+    hello() {
+      const hr = new Date().getHours();
+      const g = hr < 5 ? 'good night' : hr < 12 ? 'good morning' : hr < 18 ? 'good afternoon' : 'good evening';
+      termPrint(g + ', visitor <span class="t-acc">♡</span> — visit <span class="t-acc">#' + siteVisits + '</span>');
+    },
+    hi() { COMMANDS.hello(); },
     pwd() { termPrint('/home/tabby/bio'); },
     cd() { termPrint('<span class="t-dim">nowhere else to go — this is home :3</span>'); },
     secrets() { termPrint('<span class="t-dim">that would be telling :3 (there are 4)</span>'); },
