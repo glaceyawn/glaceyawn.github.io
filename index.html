@@ -1092,18 +1092,6 @@
       70%, 100% { transform: scale(1.9); opacity: 0; }
     }
 
-    /* viewfinder corner brackets */
-    .corner {
-      position: fixed;
-      width: 22px;
-      height: 22px;
-      z-index: 60;
-      pointer-events: none;
-      border: 0 solid rgba(var(--accent-rgb), 0.3);
-    }
-    .c-tl { top: 14px; left: 14px;  border-top-width: 1px; border-left-width: 1px; }
-    .c-tr { top: 14px; right: 14px; border-top-width: 1px; border-right-width: 1px; }
-
     /* click ripple */
     .ripple {
       position: fixed;
@@ -1526,7 +1514,6 @@
       .orb { display: none; }
       .aurora { display: none; }
       .fog { display: none; }
-      .corner { display: none; }
       .plants { display: none; }
       #snow { opacity: 0.35; }
     }
@@ -1575,8 +1562,6 @@
 <div class="fog fog-2"></div>
 <div class="frost"></div>
 <div class="flash" id="flash"></div>
-<div class="corner c-tl"></div>
-<div class="corner c-tr"></div>
 
 <span class="walker" id="walker" title="pet the cat">ᓚᘏᗢ</span>
 
