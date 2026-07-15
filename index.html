@@ -38,14 +38,18 @@
 
     ::selection { background: rgba(var(--accent-rgb), 0.25); color: var(--fg-hi); }
 
+    html {
+      scrollbar-width: thin;
+      scrollbar-color: var(--bd) transparent;
+    }
+
     body {
       min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     /* vignette */
@@ -119,6 +123,8 @@
     .card-wrap {
       position: relative;
       z-index: 1;
+      margin: auto;               /* centers when it fits, scrolls when it doesn't */
+      padding: 26px 0;
       perspective: 900px;
       animation: floaty 6s ease-in-out infinite;
     }
@@ -148,7 +154,7 @@
       transform: translateY(-50%);
       width: 24px;
       height: 62px;
-      background: rgba(22,22,22,0.9);
+      background: var(--panel);
       border: 1px solid var(--bd);
       border-left: none;
       border-radius: 0 3px 3px 0;
@@ -1003,7 +1009,7 @@
       z-index: 60;
       width: 28px;
       height: 28px;
-      background: rgba(22,22,22,0.8);
+      background: var(--panel);
       border: 1px solid var(--bd);
       border-radius: 2px;
       color: var(--dim);
@@ -1101,6 +1107,47 @@
     @keyframes rippleanim {
       from { width: 0;    height: 0;    opacity: 0.6; }
       to   { width: 46px; height: 46px; opacity: 0; }
+    }
+
+    .light-btn {
+      position: fixed;
+      top: 14px;
+      left: 16px;
+      z-index: 60;
+      width: 28px;
+      height: 28px;
+      background: var(--panel);
+      border: 1px solid var(--bd);
+      border-radius: 2px;
+      color: var(--dim);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+      padding: 0;
+      line-height: 1;
+    }
+    .light-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+    /* light mode adjustments */
+    body.light .titlebar,
+    body.light .greeter-bar,
+    body.light .explorer-titlebar,
+    body.light .footer { background: rgba(0,0,0,0.05); }
+    body.light .profile,
+    body.light .activity,
+    body.light .terminal { background: rgba(0,0,0,0.035); }
+    body.light .moon,
+    body.light .frost { display: none; }
+    body.light::before {
+      background: radial-gradient(ellipse at center, transparent 48%, rgba(0,0,0,0.12) 100%);
+    }
+    body.light #enter-overlay { background: rgba(242,242,246,0.72); }
+    body.light .saver { background: rgba(244,244,248,0.94); }
+    body.light .card,
+    body.light .explorer,
+    body.light .greeter {
+      box-shadow: 0 8px 28px rgba(40,40,60,0.16), 0 0 70px rgba(var(--accent-rgb), 0.07);
     }
 
     /* moon */
@@ -1426,6 +1473,17 @@
     }
     .card.glitch { animation: shake 0.5s; }
 
+    /* big monitors: scale the ui windows, keep the sky native */
+    @media (min-width: 2200px) {
+      .card-wrap, .explorer, .help-btn, .help-panel, .greeter, .toast { zoom: 1.22; }
+    }
+    @media (min-width: 3000px) {
+      .card-wrap, .explorer, .help-btn, .help-panel, .greeter, .toast { zoom: 1.42; }
+    }
+    @media (min-width: 3800px) {
+      .card-wrap, .explorer, .help-btn, .help-panel, .greeter, .toast { zoom: 1.7; }
+    }
+
     /* mobile */
     @media (max-width: 560px) {
       body {
@@ -1450,9 +1508,36 @@
       .vol-slider::-moz-range-thumb     { width: 14px; height: 14px; }
 
       .help-btn { display: none; }
+      .light-btn { display: none; }
       .tb-help { display: inline-block; }
       .help-panel { width: calc(100vw - 32px); top: 16px; }
       .greeter { width: min(304px, calc(100vw - 48px)); }
+
+      /* declutter: titlebar becomes dots + buttons only */
+      .tb-title { display: none; }
+      .tb-dots { margin-right: auto; }
+      .tb-term { width: 30px; font-size: 0.66rem; }
+
+      /* files: edge tab (which sat over content) replaced by titlebar button */
+      .explorer-tab { display: none; }
+      .explorer { top: auto; bottom: 84px; transform: none; }
+      .explorer.closed { transform: translateX(calc(-100% - 15px)); }
+      .explorer-body { max-height: 44vh; }
+
+      /* quieter card rows */
+      .eq { display: none; }
+      .vol-pct { display: none; }
+      .music-thumb { width: 26px; height: 26px; }
+
+      /* tighter rhythm */
+      .profile  { padding: 14px 16px 12px; }
+      .section  { padding: 12px 16px; }
+      .activity { padding: 10px 16px; }
+      .terminal { padding: 10px 16px 11px; }
+      .footer   { padding: 8px 16px; }
+
+      /* calmer sky */
+      .moon { display: none; }
 
       .orb { display: none; }
       .aurora { display: none; }
@@ -1527,6 +1612,7 @@
 </div>
 
 <button class="help-btn" id="help-btn" title="help" aria-label="help">?</button>
+<button class="light-btn" id="light-btn" title="light / dark" aria-label="toggle light mode">☾</button>
 <div class="help-panel" id="help-panel">
   <div class="help-h">keys</div>
   <div class="help-row"><span class="help-k">`</span><span class="help-d">open terminal</span></div>
@@ -1537,6 +1623,7 @@
   <div class="help-row"><span class="help-k">?</span><span class="help-d">this panel</span></div>
   <div class="help-h">clicks</div>
   <div class="help-row"><span class="help-k">titlebar dots</span><span class="help-d">change theme</span></div>
+  <div class="help-row"><span class="help-k">☾ top left</span><span class="help-d">light mode</span></div>
   <div class="help-row"><span class="help-k">♫ note</span><span class="help-d">tint the snow</span></div>
   <div class="help-row"><span class="help-k">prompt</span><span class="help-d">copy discord</span></div>
   <div class="help-row"><span class="help-k">avatar</span><span class="help-d">discord profile</span></div>
@@ -1579,6 +1666,8 @@
     <span class="tb-title" id="tb-title">tabby@nixos — ~/bio</span>
     <button class="tb-term" id="tb-term" title="terminal (`)" aria-label="open terminal">&gt;_</button>
     <button class="tb-term tb-help" id="tb-help" title="help" aria-label="help">?</button>
+    <button class="tb-term tb-help" id="tb-light" title="light / dark" aria-label="toggle light mode">☾</button>
+    <button class="tb-term tb-help" id="tb-files" title="files" aria-label="open files">▤</button>
   </div>
 
   <div class="profile reveal">
@@ -1738,14 +1827,36 @@
     tokyo:    { bg:'#131318', 'c-hi':'#1a1b26', 'c-lo':'#16161e', panel:'#16161e', panel2:'#131318', bd:'#292e42', bd2:'#23283b', 'fg-hi':'#c0caf5', fg:'#9aa5ce', 'fg-dim':'#787c99', dim:'#565f89', dim2:'#414868', sub:'#7aa2f7' },
     rosepine: { bg:'#16141f', 'c-hi':'#1f1d2e', 'c-lo':'#191724', panel:'#191724', panel2:'#16141f', bd:'#26233a', bd2:'#211f31', 'fg-hi':'#e0def4', fg:'#908caa', 'fg-dim':'#7d7a96', dim:'#6e6a86', dim2:'#524f6c', sub:'#9ccfd8' }
   };
+  const PALETTES_LIGHT = {
+    tabby:    { bg:'#f2f2f4', 'c-hi':'#ffffff', 'c-lo':'#f6f6f8', panel:'#ffffff', panel2:'#f4f4f6', bd:'#d8d8de', bd2:'#e5e5ea', 'fg-hi':'#2a2a30', fg:'#55555e', 'fg-dim':'#6b6b76', dim:'#8a8a96', dim2:'#a6a6b2', sub:'#6a74a8' },
+    mocha:    { bg:'#e6e9ef', 'c-hi':'#eff1f5', 'c-lo':'#e9ecf2', panel:'#eff1f5', panel2:'#e6e9ef', bd:'#bcc0cc', bd2:'#ccd0da', 'fg-hi':'#4c4f69', fg:'#5c5f77', 'fg-dim':'#6c6f85', dim:'#7c7f93', dim2:'#9ca0b0', sub:'#7287fd' },
+    gruvbox:  { bg:'#f2e5bc', 'c-hi':'#fbf1c7', 'c-lo':'#f4e8be', panel:'#fbf1c7', panel2:'#f2e5bc', bd:'#d5c4a1', bd2:'#ebdbb2', 'fg-hi':'#3c3836', fg:'#504945', 'fg-dim':'#665c54', dim:'#7c6f64', dim2:'#928374', sub:'#076678' },
+    nord:     { bg:'#e5e9f0', 'c-hi':'#eceff4', 'c-lo':'#e7ebf1', panel:'#eceff4', panel2:'#e5e9f0', bd:'#c8ceda', bd2:'#d8dee9', 'fg-hi':'#2e3440', fg:'#434c5e', 'fg-dim':'#4c566a', dim:'#616e88', dim2:'#7b88a1', sub:'#5e81ac' },
+    tokyo:    { bg:'#d5d8e2', 'c-hi':'#e1e2e7', 'c-lo':'#d9dce6', panel:'#e1e2e7', panel2:'#d5d8e2', bd:'#b4b9c9', bd2:'#c8cdda', 'fg-hi':'#343b58', fg:'#565a6e', 'fg-dim':'#6b7089', dim:'#8189a8', dim2:'#9aa0bd', sub:'#2e7de9' },
+    rosepine: { bg:'#f2e9e1', 'c-hi':'#faf4ed', 'c-lo':'#f5eee5', panel:'#fffaf3', panel2:'#f4ede4', bd:'#cecacd', bd2:'#dfdad9', 'fg-hi':'#575279', fg:'#6e6a86', 'fg-dim':'#797593', dim:'#9893a5', dim2:'#b1abb8', sub:'#56949f' }
+  };
+  const LIGHT_ACCENTS = {
+    tabby:    ['#7563c9', '117,99,201'],
+    mocha:    ['#8839ef', '136,57,239'],
+    gruvbox:  ['#b16286', '177,98,134'],
+    nord:     ['#5e81ac', '94,129,172'],
+    tokyo:    ['#7847bd', '120,71,189'],
+    rosepine: ['#907aa9', '144,122,169']
+  };
   let accentIdx = parseInt(localStorage.getItem('accent') || '0') % ACCENTS.length;
+  let lightMode = localStorage.getItem('light') === '1';
+  let accentHex = ACCENTS[0][1], accentRGB = ACCENTS[0][2];
 
   function applyAccent() {
-    const [name, hex, rgb] = ACCENTS[accentIdx];
+    const name = ACCENTS[accentIdx][0];
+    accentHex = lightMode ? LIGHT_ACCENTS[name][0] : ACCENTS[accentIdx][1];
+    accentRGB = lightMode ? LIGHT_ACCENTS[name][1] : accentRGB;
+    const hex = accentHex, rgb = accentRGB;
     const rootStyle = document.documentElement.style;
     rootStyle.setProperty('--accent', hex);
     rootStyle.setProperty('--accent-rgb', rgb);
-    const pal = PALETTES[name];
+    document.body.classList.toggle('light', lightMode);
+    const pal = (lightMode ? PALETTES_LIGHT : PALETTES)[name];
     for (const k in pal) rootStyle.setProperty('--' + k, pal[k]);
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.content = hex;
@@ -1754,6 +1865,23 @@
       "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='" + pal.bg + "'/><text x='16' y='22' font-size='13' text-anchor='middle' fill='" + hex + "' font-family='monospace'>:3</text></svg>");
   }
   applyAccent();
+
+  function toggleLight() {
+    lightMode = !lightMode;
+    localStorage.setItem('light', lightMode ? '1' : '0');
+    applyAccent();
+    const btn = document.getElementById('light-btn');
+    const tbtn = document.getElementById('tb-light');
+    if (btn) btn.textContent = lightMode ? '☀' : '☾';
+    if (tbtn) tbtn.textContent = lightMode ? '☀' : '☾';
+    showToast(lightMode ? '☀ <span class="t-accent">light mode</span>' : '☾ <span class="t-accent">dark mode</span>');
+  }
+  document.getElementById('light-btn').addEventListener('click', toggleLight);
+  document.getElementById('tb-light').addEventListener('click', toggleLight);
+  if (lightMode) {
+    document.getElementById('light-btn').textContent = '☀';
+    document.getElementById('tb-light').textContent = '☀';
+  }
 
   document.querySelectorAll('.card .tb-dot').forEach(dot => {
     dot.addEventListener('click', () => {
@@ -2474,6 +2602,10 @@
       else shut();
     });
     document.getElementById('ex-close').addEventListener('click', shut);
+    document.getElementById('tb-files').addEventListener('click', () => {
+      if (ex.classList.contains('closed')) ex.classList.remove('closed');
+      else shut();
+    });
   })();
 
   // mini terminal
@@ -2503,6 +2635,7 @@
         termWelcomed = true;
       }
       termInput.focus();
+      setTimeout(() => termInput.scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 60);
     }
   }
 
@@ -2515,7 +2648,7 @@
 
   const COMMANDS = {
     help() {
-      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
+      termPrint('<span class="t-dim">commands:</span> whoami · neofetch · cowsay &lt;text&gt; · weather &lt;city&gt; · cat · fortune · 8ball &lt;q&gt; · roll &lt;n&gt; · flip · calc &lt;expr&gt; · ping &lt;host&gt; · hack · train · matrix · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · light · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
     },
     whoami() {
       const ua = navigator.userAgent;
@@ -2563,6 +2696,7 @@
         termPrint('<span class="t-err">no such link:</span> ' + esc(arg || '') + ' <span class="t-dim">— try ls</span>');
       }
     },
+    light() { toggleLight(); },
     theme(arg) {
       const idx = ACCENTS.findIndex(a => a[0] === arg);
       if (idx === -1) {
@@ -2888,7 +3022,7 @@
     };
   }
 
-  function init() { resize(); flakes = Array.from({ length: 120 }, makeFlake); initSky(); }
+  function init() { resize(); flakes = Array.from({ length: W < 600 ? 60 : 120 }, makeFlake); initSky(); }
 
   // matrix mode
   let bgMode = 'snow';
@@ -2908,7 +3042,7 @@
         l: 6 + Math.random() * 10, s: 7 + Math.random() * 7
       }));
     }
-    ctx.strokeStyle = 'rgba(168,176,204,0.32)';
+    ctx.strokeStyle = lightMode ? 'rgba(88,98,142,0.4)' : 'rgba(168,176,204,0.32)';
     ctx.lineWidth = 1;
     for (const r of rains) {
       ctx.beginPath();
@@ -2925,14 +3059,14 @@
   let nextMeteor = performance.now() + 5000 + Math.random() * 8000;
 
   function initSky() {
-    stars = Array.from({ length: 90 }, () => ({
+    stars = Array.from({ length: W < 600 ? 45 : 90 }, () => ({
       x: Math.random() * W, y: Math.random() * H,
       r: Math.random() * 1.1 + 0.3,
       tw: Math.random() * Math.PI * 2,
       sp: 0.008 + Math.random() * 0.022,
       depth: 0.2 + Math.random() * 0.8
     }));
-    flies = Array.from({ length: 7 }, () => ({
+    flies = Array.from({ length: W < 600 ? 4 : 7 }, () => ({
       x: Math.random() * W, y: Math.random() * H,
       a: Math.random() * Math.PI * 2,
       sp: 0.15 + Math.random() * 0.2,
@@ -2950,13 +3084,17 @@
     sat = { x: -30, y: H * (0.08 + Math.random() * 0.3), sp: 0.35 + Math.random() * 0.25, t: 0 };
   }
 
+  function inkA(a) {
+    return (lightMode ? 'rgba(72,74,102,' : 'rgba(255,255,255,') + a + ')';
+  }
+
   function drawSky() {
     // parallax
     const px = snowMouse.x >= 0 ? (snowMouse.x - W / 2) : 0;
     const py = snowMouse.y >= 0 ? (snowMouse.y - H / 2) : 0;
 
     // constellations
-    ctx.strokeStyle = 'rgba(255,255,255,0.045)';
+    ctx.strokeStyle = inkA(0.06);
     ctx.lineWidth = 1;
     for (const c of consts) {
       ctx.beginPath();
@@ -2968,7 +3106,7 @@
       for (const p of c) {
         ctx.beginPath();
         ctx.arc(p.x - px * 0.006, p.y - py * 0.006, 1.3, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,0.4)';
+        ctx.fillStyle = inkA(0.42);
         ctx.fill();
       }
     }
@@ -2979,7 +3117,7 @@
       const o = 0.22 + 0.33 * (0.5 + 0.5 * Math.sin(s.tw));
       ctx.beginPath();
       ctx.arc(s.x - px * 0.012 * s.depth, s.y - py * 0.012 * s.depth, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,' + o + ')';
+      ctx.fillStyle = inkA(o);
       ctx.fill();
     }
 
@@ -2994,11 +3132,11 @@
       const o = 0.15 + 0.3 * (0.5 + 0.5 * Math.sin(f.tw));
       ctx.beginPath();
       ctx.arc(f.x, f.y, 5, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',' + (o * 0.22) + ')';
+      ctx.fillStyle = 'rgba(' + accentRGB + ',' + (o * 0.22) + ')';
       ctx.fill();
       ctx.beginPath();
       ctx.arc(f.x, f.y, 1.6, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',' + o + ')';
+      ctx.fillStyle = 'rgba(' + accentRGB + ',' + o + ')';
       ctx.fill();
     }
 
@@ -3014,7 +3152,7 @@
     for (let i = meteors.length - 1; i >= 0; i--) {
       const m = meteors[i];
       m.x += m.vx; m.y += m.vy; m.life -= 0.008;
-      ctx.strokeStyle = 'rgba(255,255,255,' + Math.max(0, 0.5 * m.life) + ')';
+      ctx.strokeStyle = inkA(Math.max(0, 0.5 * m.life));
       ctx.lineWidth = 1.2;
       ctx.beginPath();
       ctx.moveTo(m.x, m.y);
@@ -3036,12 +3174,12 @@
       const pulse = 0.35 + 0.35 * (0.5 + 0.5 * Math.sin(sat.t * 0.06));
       ctx.beginPath();
       ctx.arc(sat.x, sat.y, 1.4, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,' + pulse + ')';
+      ctx.fillStyle = inkA(pulse);
       ctx.fill();
       if (sat.t % 90 < 5) {
         ctx.beginPath();
         ctx.arc(sat.x + 3, sat.y - 2, 1, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',0.8)';
+        ctx.fillStyle = 'rgba(' + accentRGB + ',0.8)';
         ctx.fill();
       }
     }
@@ -3050,10 +3188,10 @@
   function drawMatrix() {
     const cols = Math.floor(W / 14) + 1;
     if (drops.length !== cols) drops = Array.from({ length: cols }, () => Math.random() * H / 14);
-    ctx.fillStyle = 'rgba(15,15,17,0.14)';
+    ctx.fillStyle = lightMode ? 'rgba(238,240,246,0.16)' : 'rgba(15,15,17,0.14)';
     ctx.fillRect(0, 0, W, H);
     ctx.font = '12px monospace';
-    ctx.fillStyle = 'rgba(' + ACCENTS[accentIdx][2] + ',0.9)';
+    ctx.fillStyle = 'rgba(' + accentRGB + ',0.9)';
     for (let i = 0; i < cols; i++) {
       ctx.fillText(MCHARS[Math.floor(Math.random() * MCHARS.length)], i * 14, drops[i] * 14);
       if (drops[i] * 14 > H && Math.random() > 0.975) drops[i] = 0;
@@ -3078,8 +3216,8 @@
       ctx.beginPath();
       ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
       ctx.fillStyle = snowAccent
-        ? `rgba(${ACCENTS[accentIdx][2]},${f.opacity})`
-        : `rgba(255,255,255,${f.opacity})`;
+        ? `rgba(${accentRGB},${f.opacity})`
+        : inkA(f.opacity);
       ctx.fill();
       f.y += f.speed; f.x += f.drift;
       const ddx = f.x - snowMouse.x, ddy = f.y - snowMouse.y;
