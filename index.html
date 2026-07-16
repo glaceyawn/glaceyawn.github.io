@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>tabby</title>
   <meta name="description" content="tabby's little corner of the internet" />
-  <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#8878d4" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#79b4ea" />
   <meta property="og:site_name" content="tabby.beauty" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tabby.beauty/" />
@@ -19,7 +19,7 @@
   <meta name="twitter:title" content="tabby ᓚᘏᗢ" />
   <meta name="twitter:description" content="hi its me it my bio" />
   <meta name="twitter:image" content="https://tabby.beauty/embed.gif" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230f0f11'/><text x='16' y='22' font-size='13' text-anchor='middle' fill='%238878d4' font-family='monospace'>:3</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23242933'/><text x='16' y='22' font-size='13' text-anchor='middle' fill='%2388c0d0' font-family='monospace'>:3</text></svg>" />
   <link rel="preconnect" href="https://api.lanyard.rest" />
   <link rel="preconnect" href="https://www.youtube.com" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,22 +28,22 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      color-scheme: dark;
-      --accent: #8878d4;
-      --accent-rgb: 136,120,212;
-      --bg: #0f0f11;
-      --c-hi: #1f1f1f;
-      --c-lo: #191919;
-      --panel: #161616;
-      --panel2: #141414;
-      --bd: #2a2a2a;
-      --bd2: #232323;
-      --fg-hi: #c8c8c8;
-      --fg: #6e6e6e;
-      --fg-dim: #5e5e5e;
-      --dim: #4a4a4a;
-      --dim2: #3a3a3a;
-      --sub: #a8b0cc;
+      color-scheme: light;
+      --accent: #5e81ac;
+      --accent-rgb: 94,129,172;
+      --bg: #b9cbe3;
+      --c-hi: #cbd9ec;
+      --c-lo: #c1d1e7;
+      --panel: #cbd9ec;
+      --panel2: #adc2dc;
+      --bd: #7f97b8;
+      --bd2: #97abc8;
+      --fg-hi: #22293a;
+      --fg: #374357;
+      --fg-dim: #435268;
+      --dim: #566a86;
+      --dim2: #6f82a0;
+      --sub: #38659e;
     }
 
     ::selection { background: rgba(var(--accent-rgb), 0.25); color: var(--fg-hi); }
@@ -967,6 +967,31 @@
     }
     .greeter .g-dim { color: var(--dim2); }
     .greeter .g-acc { color: var(--accent); }
+    .greeter-mode {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 15px;
+    }
+    .gm-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.05em;
+      color: var(--dim);
+      background: rgba(0,0,0,0.1);
+      border: 1px solid var(--bd);
+      border-radius: 2px;
+      padding: 5px 13px;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .gm-btn:hover { color: var(--fg-hi); }
+    .gm-btn.on {
+      color: var(--accent);
+      border-color: rgba(var(--accent-rgb), 0.6);
+      background: rgba(var(--accent-rgb), 0.09);
+    }
+
     .greeter-btn {
       display: inline-block;
       font-family: 'JetBrains Mono', monospace;
@@ -1141,6 +1166,20 @@
     }
     body.light #enter-overlay { background: rgba(242,242,246,0.72); }
     body.light .saver { background: rgba(244,244,248,0.94); }
+    body.light .orb-1 { opacity: 0.20; }
+    body.light .orb-2 { opacity: 0.17; }
+    body.light .orb-3 { opacity: 0.15; }
+    body.light .fog   { opacity: 0.13; }
+    body.light .fog-2 { opacity: 0.10; }
+    body.light .aurora {
+      background: linear-gradient(100deg,
+        transparent 10%,
+        rgba(var(--accent-rgb), 0.17) 35%,
+        rgba(70, 90, 140, 0.13) 55%,
+        rgba(172, 96, 122, 0.11) 72%,
+        transparent 90%);
+    }
+
     body.light .card,
     body.light .explorer,
     body.light .greeter {
@@ -1547,6 +1586,10 @@
       <div class="greeter-host">tabby<span class="g-acc">.beauty</span></div>
       <div class="greeter-line"></div>
       <div class="greeter-meta"><span id="greeter-greet">hello</span>, visitor <span class="g-acc">♡</span></div>
+      <div class="greeter-mode">
+        <button class="gm-btn" id="gm-light">☀ light</button>
+        <button class="gm-btn" id="gm-dark">☾ dark</button>
+      </div>
       <span class="greeter-btn">click 2 entr! <span class="g-acc">:3</span></span>
     </div>
   </div>
@@ -1780,10 +1823,10 @@
 
   // themes
   const ACCENTS = [
+    ['nord',     '#88c0d0', '136,192,208'],
     ['tabby',    '#8878d4', '136,120,212'],
     ['mocha',    '#cba6f7', '203,166,247'],
     ['gruvbox',  '#d3869b', '211,134,155'],
-    ['nord',     '#88c0d0', '136,192,208'],
     ['tokyo',    '#bb9af7', '187,154,247'],
     ['rosepine', '#c4a7e7', '196,167,231']
   ];
@@ -1796,12 +1839,12 @@
     rosepine: { bg:'#16141f', 'c-hi':'#1f1d2e', 'c-lo':'#191724', panel:'#191724', panel2:'#16141f', bd:'#26233a', bd2:'#211f31', 'fg-hi':'#e0def4', fg:'#908caa', 'fg-dim':'#7d7a96', dim:'#6e6a86', dim2:'#524f6c', sub:'#9ccfd8' }
   };
   const PALETTES_LIGHT = {
-    tabby:    { bg:'#f2f2f4', 'c-hi':'#ffffff', 'c-lo':'#f6f6f8', panel:'#ffffff', panel2:'#f4f4f6', bd:'#d8d8de', bd2:'#e5e5ea', 'fg-hi':'#2a2a30', fg:'#55555e', 'fg-dim':'#6b6b76', dim:'#8a8a96', dim2:'#a6a6b2', sub:'#6a74a8' },
-    mocha:    { bg:'#e6e9ef', 'c-hi':'#eff1f5', 'c-lo':'#e9ecf2', panel:'#eff1f5', panel2:'#e6e9ef', bd:'#bcc0cc', bd2:'#ccd0da', 'fg-hi':'#4c4f69', fg:'#5c5f77', 'fg-dim':'#6c6f85', dim:'#7c7f93', dim2:'#9ca0b0', sub:'#7287fd' },
-    gruvbox:  { bg:'#f2e5bc', 'c-hi':'#fbf1c7', 'c-lo':'#f4e8be', panel:'#fbf1c7', panel2:'#f2e5bc', bd:'#d5c4a1', bd2:'#ebdbb2', 'fg-hi':'#3c3836', fg:'#504945', 'fg-dim':'#665c54', dim:'#7c6f64', dim2:'#928374', sub:'#076678' },
-    nord:     { bg:'#e5e9f0', 'c-hi':'#eceff4', 'c-lo':'#e7ebf1', panel:'#eceff4', panel2:'#e5e9f0', bd:'#c8ceda', bd2:'#d8dee9', 'fg-hi':'#2e3440', fg:'#434c5e', 'fg-dim':'#4c566a', dim:'#616e88', dim2:'#7b88a1', sub:'#5e81ac' },
-    tokyo:    { bg:'#d5d8e2', 'c-hi':'#e1e2e7', 'c-lo':'#d9dce6', panel:'#e1e2e7', panel2:'#d5d8e2', bd:'#b4b9c9', bd2:'#c8cdda', 'fg-hi':'#343b58', fg:'#565a6e', 'fg-dim':'#6b7089', dim:'#8189a8', dim2:'#9aa0bd', sub:'#2e7de9' },
-    rosepine: { bg:'#f2e9e1', 'c-hi':'#faf4ed', 'c-lo':'#f5eee5', panel:'#fffaf3', panel2:'#f4ede4', bd:'#cecacd', bd2:'#dfdad9', 'fg-hi':'#575279', fg:'#6e6a86', 'fg-dim':'#797593', dim:'#9893a5', dim2:'#b1abb8', sub:'#56949f' }
+    tabby:    { bg:'#cfcbe8', 'c-hi':'#dedbf1', 'c-lo':'#d5d1ec', panel:'#dedbf1', panel2:'#c7c2e2', bd:'#a49cce', bd2:'#b7b0da', 'fg-hi':'#26243a', fg:'#48446a', 'fg-dim':'#5b5680', dim:'#736d9c', dim2:'#8d87b2', sub:'#5a55b8' },
+    mocha:    { bg:'#c3cbee', 'c-hi':'#d4daf4', 'c-lo':'#cad2f0', panel:'#d4daf4', panel2:'#bac4ea', bd:'#8f9ad0', bd2:'#a5aede', 'fg-hi':'#2c3054', fg:'#484d78', 'fg-dim':'#585d8a', dim:'#6d73a2', dim2:'#878cba', sub:'#4d5fe8' },
+    gruvbox:  { bg:'#d8bd7f', 'c-hi':'#e6cf95', 'c-lo':'#dec489', panel:'#e6cf95', panel2:'#ceb173', bd:'#9c8a64', bd2:'#b3a077', 'fg-hi':'#2e2a22', fg:'#463f32', 'fg-dim':'#5a5140', dim:'#6f6450', dim2:'#867a62', sub:'#0b5e70' },
+    nord:     { bg:'#b9cbe3', 'c-hi':'#cbd9ec', 'c-lo':'#c1d1e7', panel:'#cbd9ec', panel2:'#adc2dc', bd:'#7f97b8', bd2:'#97abc8', 'fg-hi':'#22293a', fg:'#374357', 'fg-dim':'#435268', dim:'#566a86', dim2:'#6f82a0', sub:'#38659e' },
+    tokyo:    { bg:'#aab6dd', 'c-hi':'#bec8e8', 'c-lo':'#b2bde2', panel:'#bec8e8', panel2:'#a0aed7', bd:'#7583b4', bd2:'#8b98c4', 'fg-hi':'#252c4c', fg:'#414763', 'fg-dim':'#525978', dim:'#677098', dim2:'#8088ac', sub:'#2158c4' },
+    rosepine: { bg:'#e5c2ae', 'c-hi':'#efd4c3', 'c-lo':'#e9cab7', panel:'#f1dccd', panel2:'#dcb69f', bd:'#b08d7e', bd2:'#c4a392', 'fg-hi':'#463f60', fg:'#5e5776', 'fg-dim':'#6a6384', dim:'#857c94', dim2:'#9c92a4', sub:'#417e88' }
   };
   const LIGHT_ACCENTS = {
     tabby:    ['#7563c9', '117,99,201'],
@@ -1811,8 +1854,9 @@
     tokyo:    ['#7847bd', '120,71,189'],
     rosepine: ['#907aa9', '144,122,169']
   };
-  let accentIdx = parseInt(localStorage.getItem('accent') || '0') % ACCENTS.length;
-  let lightMode = localStorage.getItem('light') === '1';
+  let accentIdx = parseInt(localStorage.getItem('accent2') || '0') % ACCENTS.length;
+  const savedLight = localStorage.getItem('light');
+  let lightMode = savedLight === null ? true : savedLight === '1';
   let accentHex = ACCENTS[0][1], accentRGB = ACCENTS[0][2];
 
   function applyAccent() {
@@ -1824,6 +1868,7 @@
     rootStyle.setProperty('--accent', hex);
     rootStyle.setProperty('--accent-rgb', rgb);
     document.body.classList.toggle('light', lightMode);
+    document.documentElement.style.colorScheme = lightMode ? 'light' : 'dark';
     const pal = (lightMode ? PALETTES_LIGHT : PALETTES)[name];
     for (const k in pal) rootStyle.setProperty('--' + k, pal[k]);
     const meta = document.querySelector('meta[name="theme-color"]');
@@ -1854,7 +1899,7 @@
   document.querySelectorAll('.card .tb-dot').forEach(dot => {
     dot.addEventListener('click', () => {
       accentIdx = (accentIdx + 1) % ACCENTS.length;
-      localStorage.setItem('accent', accentIdx);
+      localStorage.setItem('accent2', accentIdx);
       applyAccent();
       showToast('theme <span class="t-accent">→ ' + ACCENTS[accentIdx][0] + '</span>');
     });
@@ -2353,8 +2398,18 @@
     }
   });
 
-  // greeter greeting
+  // greeter greeting + mode picker
   (function greeterInit() {
+    const gl = document.getElementById('gm-light');
+    const gd = document.getElementById('gm-dark');
+    function paintMode() {
+      gl.classList.toggle('on', lightMode);
+      gd.classList.toggle('on', !lightMode);
+    }
+    paintMode();
+    gl.addEventListener('click', (e) => { e.stopPropagation(); if (!lightMode) toggleLight(); paintMode(); });
+    gd.addEventListener('click', (e) => { e.stopPropagation(); if (lightMode) toggleLight(); paintMode(); });
+
     const hr = new Date().getHours();
     const back = (parseInt(localStorage.getItem('visits') || '0') || 0) > 0;
     document.getElementById('greeter-greet').textContent = back
@@ -2675,7 +2730,7 @@
         return;
       }
       accentIdx = idx;
-      localStorage.setItem('accent', idx);
+      localStorage.setItem('accent2', idx);
       applyAccent();
       termPrint('theme <span class="t-acc">→ ' + arg + '</span>');
     },
@@ -2952,7 +3007,7 @@
         l: 6 + Math.random() * 10, s: 7 + Math.random() * 7
       }));
     }
-    ctx.strokeStyle = lightMode ? 'rgba(88,98,142,0.4)' : 'rgba(168,176,204,0.32)';
+    ctx.strokeStyle = lightMode ? 'rgba(48,60,104,0.58)' : 'rgba(168,176,204,0.32)';
     ctx.lineWidth = 1;
     for (const r of rains) {
       ctx.beginPath();
@@ -2966,6 +3021,7 @@
 
   // sky
   let stars = [], flies = [], meteors = [], consts = [], sat = null;
+  let band = [], motes = [], flare = null;
   let nextMeteor = performance.now() + 5000 + Math.random() * 8000;
 
   function initSky() {
@@ -2992,16 +3048,50 @@
       }));
     });
     sat = { x: -30, y: H * (0.08 + Math.random() * 0.3), sp: 0.35 + Math.random() * 0.25, t: 0 };
+
+    // milky way: dense micro-stars along a soft diagonal band
+    band = [];
+    const bx0 = -W * 0.1, by0 = H * 0.55, bx1 = W * 1.1, by1 = H * 0.1;
+    for (let i = 0; i < 240; i++) {
+      const p = Math.random();
+      const off = (Math.random() + Math.random() - 1) * 78;   // clustered around the line
+      const nx = -(by1 - by0), ny = (bx1 - bx0);
+      const nl = Math.hypot(nx, ny);
+      band.push({
+        x: bx0 + (bx1 - bx0) * p + (nx / nl) * off,
+        y: by0 + (by1 - by0) * p + (ny / nl) * off,
+        r: 0.3 + Math.random() * 0.8,
+        a: 0.05 + Math.random() * 0.13
+      });
+    }
+
+    // slow-rising dust motes
+    motes = Array.from({ length: 12 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: 1.8 + Math.random() * 1.8,
+      sp: 0.06 + Math.random() * 0.14,
+      ph: Math.random() * Math.tau || Math.random() * 6.28
+    }));
   }
 
   function inkA(a) {
-    return (lightMode ? 'rgba(72,74,102,' : 'rgba(255,255,255,') + a + ')';
+    if (lightMode) return 'rgba(38,44,76,' + Math.min(1, a * 1.45) + ')';
+    return 'rgba(255,255,255,' + a + ')';
   }
 
   function drawSky() {
     // parallax
     const px = snowMouse.x >= 0 ? (snowMouse.x - W / 2) : 0;
     const py = snowMouse.y >= 0 ? (snowMouse.y - H / 2) : 0;
+
+    // milky way (far layer, gentle shimmer)
+    const shimmer = 1 + 0.15 * Math.sin(performance.now() * 0.0006);
+    for (const b of band) {
+      ctx.beginPath();
+      ctx.arc(b.x - px * 0.004, b.y - py * 0.004, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = inkA(b.a * shimmer);
+      ctx.fill();
+    }
 
     // constellations
     ctx.strokeStyle = inkA(0.06);
@@ -3031,6 +3121,22 @@
       ctx.fill();
     }
 
+    // occasional star flare: one star briefly gets a sparkle cross
+    if (!flare && Math.random() < 0.006) {
+      flare = { s: stars[Math.floor(Math.random() * stars.length)], life: 34 };
+    }
+    if (flare) {
+      const fd = Math.sin((flare.life / 34) * Math.PI);
+      const s = flare.s, L = 9 * fd;
+      ctx.strokeStyle = inkA(0.55 * fd);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(s.x - L, s.y); ctx.lineTo(s.x + L, s.y);
+      ctx.moveTo(s.x, s.y - L); ctx.lineTo(s.x, s.y + L);
+      ctx.stroke();
+      if (--flare.life <= 0) flare = null;
+    }
+
     // fireflies
     for (const f of flies) {
       f.a += (Math.random() - 0.5) * 0.3;
@@ -3040,13 +3146,30 @@
       if (f.x < -10) f.x = W + 10; if (f.x > W + 10) f.x = -10;
       if (f.y < -10) f.y = H + 10; if (f.y > H + 10) f.y = -10;
       const o = 0.15 + 0.3 * (0.5 + 0.5 * Math.sin(f.tw));
+      const ob = lightMode ? Math.min(1, o * 1.7) : o;
       ctx.beginPath();
       ctx.arc(f.x, f.y, 5, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + accentRGB + ',' + (o * 0.22) + ')';
+      ctx.fillStyle = 'rgba(' + accentRGB + ',' + (ob * 0.25) + ')';
       ctx.fill();
       ctx.beginPath();
       ctx.arc(f.x, f.y, 1.6, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + accentRGB + ',' + o + ')';
+      ctx.fillStyle = 'rgba(' + accentRGB + ',' + ob + ')';
+      ctx.fill();
+    }
+
+    // dust motes drifting upward
+    const mt = performance.now() * 0.0008;
+    for (const m of motes) {
+      m.y -= m.sp;
+      m.x += Math.sin(mt + m.ph) * 0.18;
+      if (m.y < -8) { m.y = H + 8; m.x = Math.random() * W; }
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+      ctx.fillStyle = inkA(0.08);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.r * 0.45, 0, Math.PI * 2);
+      ctx.fillStyle = inkA(0.18);
       ctx.fill();
     }
 
@@ -3098,6 +3221,7 @@
   function draw() {
     ctx.clearRect(0, 0, W, H);
     drawSky();
+    const wind = Math.sin(performance.now() * 0.00025) * 0.4;
     if (bgMode === 'rain') {
       drawRain();
       requestAnimationFrame(draw);
@@ -3110,7 +3234,7 @@
         ? `rgba(${accentRGB},${f.opacity})`
         : inkA(f.opacity);
       ctx.fill();
-      f.y += f.speed; f.x += f.drift;
+      f.y += f.speed; f.x += f.drift + wind;
       const ddx = f.x - snowMouse.x, ddy = f.y - snowMouse.y;
       const dist = Math.hypot(ddx, ddy);
       if (dist < 90 && dist > 0.1) {
