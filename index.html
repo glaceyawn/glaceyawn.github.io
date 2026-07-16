@@ -28,22 +28,22 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      color-scheme: light;
-      --accent: #5e81ac;
-      --accent-rgb: 94,129,172;
-      --bg: #b9cbe3;
-      --c-hi: #cbd9ec;
-      --c-lo: #c1d1e7;
-      --panel: #cbd9ec;
-      --panel2: #adc2dc;
-      --bd: #7f97b8;
-      --bd2: #97abc8;
-      --fg-hi: #22293a;
-      --fg: #374357;
-      --fg-dim: #435268;
-      --dim: #566a86;
-      --dim2: #6f82a0;
-      --sub: #38659e;
+      color-scheme: dark;
+      --accent: #88c0d0;
+      --accent-rgb: 136,192,208;
+      --bg: #242933;
+      --c-hi: #2e3440;
+      --c-lo: #292f3a;
+      --panel: #292f3a;
+      --panel2: #20252e;
+      --bd: #3b4252;
+      --bd2: #343c4c;
+      --fg-hi: #eceff4;
+      --fg: #c2c9d6;
+      --fg-dim: #9ba7bc;
+      --dim: #7b88a1;
+      --dim2: #616e88;
+      --sub: #81a1c1;
     }
 
     ::selection { background: rgba(var(--accent-rgb), 0.25); color: var(--fg-hi); }
@@ -1821,6 +1821,12 @@
 <script>
   // tabby.beauty — one file, no build, no frameworks. deal with it
 
+  const LS = {
+    get(k) { try { return LS.get(k); } catch (_) { return null; } },
+    set(k, v) { try { LS.set(k, v); } catch (_) {} },
+    del(k) { try { localStorage.removeItem(k); } catch (_) {} }
+  };
+
   // themes
   const ACCENTS = [
     ['nord',     '#88c0d0', '136,192,208'],
@@ -1854,9 +1860,8 @@
     tokyo:    ['#7847bd', '120,71,189'],
     rosepine: ['#907aa9', '144,122,169']
   };
-  let accentIdx = parseInt(localStorage.getItem('accent2') || '0') % ACCENTS.length;
-  const savedLight = localStorage.getItem('light');
-  let lightMode = savedLight === null ? true : savedLight === '1';
+  let accentIdx = parseInt(LS.get('accent2') || '0') % ACCENTS.length;
+  let lightMode = LS.get('light') === '1';
   let accentHex = ACCENTS[0][1], accentRGB = ACCENTS[0][2];
 
   function applyAccent() {
@@ -1881,7 +1886,7 @@
 
   function toggleLight() {
     lightMode = !lightMode;
-    localStorage.setItem('light', lightMode ? '1' : '0');
+    LS.set('light', lightMode ? '1' : '0');
     applyAccent();
     const btn = document.getElementById('light-btn');
     const tbtn = document.getElementById('tb-light');
@@ -1899,7 +1904,7 @@
   document.querySelectorAll('.card .tb-dot').forEach(dot => {
     dot.addEventListener('click', () => {
       accentIdx = (accentIdx + 1) % ACCENTS.length;
-      localStorage.setItem('accent2', accentIdx);
+      LS.set('accent2', accentIdx);
       applyAccent();
       showToast('theme <span class="t-accent">→ ' + ACCENTS[accentIdx][0] + '</span>');
     });
@@ -2411,7 +2416,7 @@
     gd.addEventListener('click', (e) => { e.stopPropagation(); if (lightMode) toggleLight(); paintMode(); });
 
     const hr = new Date().getHours();
-    const back = (parseInt(localStorage.getItem('visits') || '0') || 0) > 0;
+    const back = (parseInt(LS.get('visits') || '0') || 0) > 0;
     document.getElementById('greeter-greet').textContent = back
       ? 'welcome back'
       : (hr < 5 ? 'good night' : hr < 12 ? 'good morning' : hr < 18 ? 'good afternoon' : 'good evening');
@@ -2422,8 +2427,8 @@
   document.getElementById('kao').textContent = KAO[Math.floor(Math.random() * KAO.length)];
 
   // visit counter (local)
-  const siteVisits = (parseInt(localStorage.getItem('visits') || '0') || 0) + 1;
-  localStorage.setItem('visits', siteVisits);
+  const siteVisits = (parseInt(LS.get('visits') || '0') || 0) + 1;
+  LS.set('visits', siteVisits);
 
   // flower launchers
   document.querySelectorAll('.plants .p-a').forEach((f, i) => {
@@ -2495,8 +2500,8 @@
   setTimeout(catWalk, 18000 + Math.random() * 20000);
 
   walker.addEventListener('click', () => {
-    const pets = (parseInt(localStorage.getItem('pets') || '0') || 0) + 1;
-    localStorage.setItem('pets', pets);
+    const pets = (parseInt(LS.get('pets') || '0') || 0) + 1;
+    LS.set('pets', pets);
     const MEOWS = ['meow :3', 'mrrp', 'purrrr ♡', 'mew!', ':3'];
     showToast('<span class="t-accent">' + MEOWS[Math.floor(Math.random() * MEOWS.length)] + '</span>');
   });
@@ -2674,7 +2679,7 @@
 
   const COMMANDS = {
     help() {
-      termPrint('<span class="t-dim">commands:</span> hello · whoami · neofetch · weather &lt;city&gt; · cat · fortune · flip · train · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · light · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · secrets · clear · exit');
+      termPrint('<span class="t-dim">commands:</span> hello · whoami · neofetch · weather &lt;city&gt; · cat · fortune · flip · train · rain · party · trail · whois · pwd · ls · open &lt;link&gt; · theme &lt;color&gt; · light · play · next · prev · vol &lt;n&gt; · mute · song · snow · github · visits · share · echo · date · uptime · history · reset · secrets · clear · exit');
     },
     whoami() {
       const ua = navigator.userAgent;
@@ -2702,7 +2707,7 @@
         '            <span class="t-dim">shell</span>   fish\n' +
         '            <span class="t-dim">uptime</span>  ' + fmtElapsed(Date.now() - pageStart) + '\n' +
         '            <span class="t-dim">visits</span>  ' + siteVisits + '\n' +
-        '            <span class="t-dim">pets</span>    ' + (parseInt(localStorage.getItem('pets') || '0') || 0) + '\n' +
+        '            <span class="t-dim">pets</span>    ' + (parseInt(LS.get('pets') || '0') || 0) + '\n' +
         '            <span class="t-dim">theme</span>   ' + ACCENTS[accentIdx][0] + '\n' +
         '            <span class="t-dim">status</span>  ' + esc(lastStatus) + '\n' +
         '            <span class="t-dim">song</span>    ' + esc(song) +
@@ -2730,7 +2735,7 @@
         return;
       }
       accentIdx = idx;
-      localStorage.setItem('accent2', idx);
+      LS.set('accent2', idx);
       applyAccent();
       termPrint('theme <span class="t-acc">→ ' + arg + '</span>');
     },
@@ -2783,7 +2788,7 @@
       } catch (_) { termPrint('<span class="t-err">weather service unreachable</span>'); }
     },
     visits() {
-      const pets = parseInt(localStorage.getItem('pets') || '0') || 0;
+      const pets = parseInt(LS.get('pets') || '0') || 0;
       termPrint('you\'ve been here <span class="t-acc">' + siteVisits + '</span> time' + (siteVisits === 1 ? '' : 's')
         + (pets ? ' <span class="t-dim">· cat petted ' + pets + '×</span>' : ''));
     },
@@ -2863,6 +2868,10 @@
       termPrint(g + ', visitor <span class="t-acc">♡</span> — visit <span class="t-acc">#' + siteVisits + '</span>');
     },
     hi() { COMMANDS.hello(); },
+    reset() {
+      ['light', 'accent2', 'visits', 'pets'].forEach(k => LS.del(k));
+      termPrint('<span class="t-acc">saved data cleared</span> <span class="t-dim">— reload to see true defaults</span>');
+    },
     pwd() { termPrint('/home/tabby/bio'); },
     cd() { termPrint('<span class="t-dim">nowhere else to go — this is home :3</span>'); },
     secrets() { termPrint('<span class="t-dim">that would be telling :3 (there are 4)</span>'); },
